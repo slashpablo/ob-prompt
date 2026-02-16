@@ -660,7 +660,6 @@ Here is a brief review with specific suggestions:
 #+end_example
 #+end_assistant
 
-
 ** Using :preamble for document context
 
 When =:preamble yes= is set, the entire buffer content above the
@@ -696,43 +695,64 @@ correct order.
 
 #+name: file-header
 #+begin_src emacs-lisp
-;;; ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
+  ;;; ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2026 Pablo Munoz
+  ;; Copyright (C) 2026 Pablo Munoz
 
-;; Author: Pablo Munoz <contact@slashpablo.com>
-;; URL: https://github.com/slashpablo/ob-prompt
-;; Version: 0.1.0
-;; Package-Requires: ((emacs "28.1") (org "9.7"))
-;; Keywords: org, babel, ai, llm
+  ;; Author: Pablo Munoz <contact@slashpablo.com>
+  ;; Mantainer: Pablo Munoz <contact@slashpablo.com>
+  ;; URL: https://github.com/slashpablo/ob-prompt
+  ;; Version: 0.1.0
+  ;; Package-Requires: ((emacs "28.1") (org "9.7"))
+  ;; Keywords: org, babel, ai, llm
 
-;;; Commentary:
+  ;; This file is part of ob-prompt.
+  ;;
+  ;; ob-prompt is free software: you can redistribute it and/or modify
+  ;; it under the terms of the GNU General Public License as published by
+  ;; the Free Software Foundation, either version 3 of the License, or
+  ;; (at your option) any later version.
+  ;;
+  ;; ob-prompt is distributed in the hope that it will be useful,
+  ;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ;; GNU General Public License for more details.
+  ;;
+  ;; You should have received a copy of the GNU General Public License
+  ;; along with ob-prompt.  If not, see <https://www.gnu.org/licenses/>.
 
-;; Org Babel support for executing LLM prompts as src blocks.
-;;
-;; Usage:
-;;   #+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
-;;   Explain monads in simple terms.
-;;   #+end_src
-;;
-;; Press C-c C-c on the block to send the prompt to an LLM
-;; and insert the response as a #+RESULTS: block.
+  ;;; Commentary:
 
-;;; Code:
+  ;; Org Babel support for executing LLM prompts as src blocks.
+  ;;
+  ;; Usage:
+  ;;   #+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
+  ;;   Explain monads in simple terms.
+  ;;   #+end_src
+  ;;
+  ;; Press C-c C-c on the block to send the prompt to an LLM
+  ;; and insert the response as a #+RESULTS: block.
 
-(require 'ob)
-(require 'org-macs)
-(require 'json)
-(require 'url)
+  ;;; Code:
+
+  (require 'ob)
+  (require 'org-element)
+  (require 'org-macs)
+  (require 'json)
+  (require 'url)
 #+end_src
 
 ** Provide
 
 #+name: provide
 #+begin_src emacs-lisp
-(provide 'ob-prompt)
+  ;;;###autoload
+  (with-eval-after-load 'org
+    (require 'ob-prompt))
 
-;;; ob-prompt.el ends here
+  (provide 'ob-prompt)
+
+  ;;; ob-prompt.el ends here
 #+end_src
 
 ** Tangled output
@@ -743,16 +763,28 @@ header, declarations, implementation, provide.
 
 #+begin_src emacs-lisp :tangle ob-prompt.el :noweb yes :padline yes
 <<file-header>>
+
 <<header-args-custom>>
+
 <<header-args-default>>
+
 <<build-messages>>
+
 <<build-payload>>
+
 <<parse-response>>
+
 <<json-encode-ascii>>
+
 <<http-transport>>
+
 <<execute>>
+
 <<format-debug>>
+
 <<expand-body>>
+
 <<prep-session>>
+
 <<provide>>
 #+end_src

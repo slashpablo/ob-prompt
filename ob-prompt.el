@@ -3,10 +3,26 @@
 ;; Copyright (C) 2026 Pablo Munoz
 
 ;; Author: Pablo Munoz <contact@slashpablo.com>
+;; Mantainer: Pablo Munoz <contact@slashpablo.com>
 ;; URL: https://github.com/slashpablo/ob-prompt
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1") (org "9.7"))
 ;; Keywords: org, babel, ai, llm
+
+;; This file is part of ob-prompt.
+;;
+;; ob-prompt is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; ob-prompt is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with ob-prompt.  If not, see <https://www.gnu.org/licenses/>.
 
 ;;; Commentary:
 
@@ -23,9 +39,11 @@
 ;;; Code:
 
 (require 'ob)
+(require 'org-element)
 (require 'org-macs)
 (require 'json)
 (require 'url)
+
 (defconst org-babel-header-args:prompt
   '((model    . :any)   ;; LLM model identifier
     (system   . :any)   ;; system prompt string
@@ -34,6 +52,7 @@
     (preamble . :any)   ;; include buffer content above block as context
     (debug    . :any))  ;; return raw request/response instead of content
   "Prompt-specific header arguments for ob-prompt.")
+
 (defvar org-babel-default-header-args:prompt
   '((:results . "raw")
     (:exports . "both") ;; Make sures both prompt and result are exported
@@ -41,6 +60,7 @@
     (:wrap . "assistant") ;; Provide concrete boundries to responses
     (:noweb . "yes")) ;; Enable <<block-name>> inclusion by default
   "Default header arguments for prompt src blocks.")
+
 (defun ob-prompt--build-messages (body &optional system preamble-text)
   "Build the messages vector for the API request.
 BODY is the user's prompt text.
@@ -56,6 +76,7 @@ and prepended to the user message."
       (push `((role . "system") (content . ,system)) messages))
     (push `((role . "user") (content . ,user-content)) messages)
     (vconcat (nreverse messages))))
+
 (defun ob-prompt--build-payload (model messages)
   "Build the JSON-ready alist for the API request.
 MODEL is the model identifier string.
@@ -63,6 +84,7 @@ MESSAGES is the vector returned by `ob-prompt--build-messages'."
   `(("model" . ,model)
     ("max_completion_tokens" . 16384)
     ("messages" . ,messages)))
+
 (defun ob-prompt--parse-response (json-string)
   "Extract the assistant's message content from JSON-STRING.
 Signals `user-error' if the response indicates an API error
@@ -82,6 +104,7 @@ or has an unexpected structure."
       (error
        (user-error "ob-prompt: unexpected response structure: %s"
                    (truncate-string-to-width json-string 200))))))
+
 (defun ob-prompt--json-encode-ascii (object)
   "Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
 This avoids `url-http-create-request' failing with
@@ -92,6 +115,7 @@ This avoids `url-http-create-request' failing with
      (lambda (char)
        (format "\\u%04x" (string-to-char char)))
      json nil t)))
+
 (defun ob-prompt--request (endpoint api-key payload)
   "Send PAYLOAD to ENDPOINT using API-KEY via built-in `url'.
 Returns the response body as a string.
@@ -119,6 +143,7 @@ Signals `user-error' on HTTP or transport errors."
 	  (buffer-substring-no-properties (point) (point-max))
 	  'utf-8))
        (kill-buffer buffer)))))
+
 (defun org-babel-execute:prompt (body params)
   "Execute a prompt BODY with PARAMS via Org Babel.
 Sends the prompt to the configured LLM endpoint and returns
@@ -146,6 +171,7 @@ the response text."
         (ob-prompt--format-debug endpoint api-key payload)
       (ob-prompt--parse-response
        (ob-prompt--request endpoint api-key payload)))))
+
 (defun ob-prompt--format-debug (endpoint api-key payload)
   "Format a debug representation of the request.
 Redacts API-KEY to show only the first and last 4 characters."
@@ -157,6 +183,7 @@ Redacts API-KEY to show only the first and last 4 characters."
     (format "endpoint: %s\napi-key:  %s\npayload:\n%s"
             endpoint redacted
             (json-encode payload))))
+
 (defun org-babel-expand-body:prompt (body params)
   "Expand BODY for a prompt block by substituting :var references.
 Each :var binding replaces $name in BODY with the variable's value."
@@ -168,10 +195,16 @@ Each :var binding replaces $name in BODY with the variable's value."
              (save-match-data (format "%s" (cdr pair)))
              expanded
              t t)))))
+
 (defun org-babel-prep-session:prompt (_session _params)
   "Prepare a prompt session.
 Prompt sessions are not yet supported."
   (error "ob-prompt: sessions are not yet implemented"))
+
+;;;###autoload
+(with-eval-after-load 'org
+  (require 'ob-prompt))
+
 (provide 'ob-prompt)
 
 ;;; ob-prompt.el ends here

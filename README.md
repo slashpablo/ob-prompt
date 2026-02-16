@@ -26,6 +26,29 @@ Explain monads in simple terms.
 
 ## Installation
 
+### From MELPA
+
+```emacs-lisp
+(package-install 'ob-prompt)
+```
+
+Or with `use-package`:
+
+```emacs-lisp
+(use-package ob-prompt
+  :ensure t)
+```
+
+Then enable the language:
+
+```emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((prompt . t)))
+```
+
+### Manual
+
 Clone the repo and add it to your load path:
 
 ```emacs-lisp
@@ -68,6 +91,10 @@ What is the capital of France?
 ```bash
 emacs -batch -L . -l ob-prompt-test.el -f ert-run-tests-batch-and-exit
 ```
+
+## License
+
+This project is licensed under the GNU General Public License v3.0 or later. See [COPYING](COPYING) for the full text.
 
 ## Author
 

@@ -1,0 +1,77 @@
+#+TITLE: ob-prompt distribution
+#+PROPERTY: header-args:emacs-lisp :tangle no :lexical t
+#+PROPERTY: header-args:prompt :model gpt-5.2-chat :endpoint "https://pablo-ml1b1csr-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-5.2-chat/chat/completions?api-version=2024-05-01-preview" :api-key (auth-source-pick-first-password :host "ai.azure.com") :preamble yes :results drawer :system "You are an expert in literate programming helping me co-author an emacs org mode file. Format your outputs in org mode format (no markdown) unless expclitly told otherwise. Keep your responses concise and to the point." :wrap assistant
+
+* Publish ob-prompt.el to MELPA — Checklist
+
+** DONE Project Readiness
+- [X] Code is hosted on a public Git repository (GitHub/GitLab/Codeberg).
+- [X] Repository name matches package name (e.g., =ob-prompt=).
+- [X] Main file is named =ob-prompt.el=.
+- [X] File header includes:
+  - [X] Proper package header:
+    #+begin_src elisp
+    ;;; ob-prompt.el --- Description -*- lexical-binding: t; -*-
+    #+end_src
+  - [X] =Version:= (semantic versioning recommended).
+  - [X] =Package-Requires:= with Emacs version and dependencies.
+  - [X] =URL:= pointing to the repo.
+  - [X] =Keywords:= relevant to the package.
+- [X] File ends with:
+  #+begin_src elisp
+  ;;; ob-prompt.el ends here
+  #+end_src
+
+** DONE Licensing
+- [X] Choose an OSI-approved license (GPL-3+ is common for Emacs).
+- [X] Add a =LICENSE= file at repo root.
+- [X] License mentioned in file header.
+
+** DONE MELPA Compatibility
+- [X] Package does *not* depend on non-ELPA packages unless justified.
+- [X] Uses standard Emacs conventions (no interactive setup on load).
+- [X] Byte-compiles without warnings:
+
+  #+begin_src sh :wrap example :results raw
+  emacs -Q --batch -f batch-byte-compile ../ob-prompt.el 2>&1
+  #+end_src
+
+  #+RESULTS:
+  #+begin_example
+  #+end_example
+
+** DONE Documentation
+- [X] =README.md= exists and includes:
+  - [X] Brief description.
+  - [X] Installation instructions via MELPA.
+  - [X] Basic usage example.
+- [X] Optional but recommended: inline docstrings for public functions.
+
+** DONE MELPA Recipe
+- [X] Fork https://github.com/melpa/melpa
+- [X] Create a new recipe file =recipes/ob-prompt= with content similar to:
+  #+begin_src elisp
+  (ob-prompt
+   :repo "yourname/ob-prompt"
+   :fetcher github)
+  #+end_src
+
+** TODO Submit to MELPA
+- [ ] Commit the recipe to your MELPA fork.
+- [ ] Open a Pull Request against =melpa/melpa=.
+- [ ] In PR description, briefly explain what ob-prompt does.
+
+** TODO After Acceptance
+- [ ] Watch the PR for CI feedback and fix issues if requested.
+- [ ] Once merged, wait for MELPA build (usually within hours).
+- [ ] Test installation:
+  #+begin_src elisp
+  M-x package-refresh-contents
+  M-x package-install RET ob-prompt RET
+  #+end_src
+
+** TODO Maintenance (Ongoing)
+- [ ] Tag releases if you want stable MELPA behavior.
+- [ ] Keep headers and =Package-Requires= updated.
+- [ ] Respond to MELPA issues or breakage reports.
+
