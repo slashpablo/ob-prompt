@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: [htmldocs/**]
+    paths: [htmldocs/**, index.html]
 
 permissions:
   pages: write
@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - run: cp index.html htmldocs/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: htmldocs
