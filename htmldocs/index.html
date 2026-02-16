@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-02-16 Mon 11:52 -->
+<!-- 2026-02-16 Mon 12:21 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>ob-prompt.el — Org Babel for LLM Prompts</title>
@@ -22,7 +22,7 @@
 <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/search.css"/>
 <link rel="stylesheet" type="text/css" href="ob-prompt.css"/>
 <style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
-<a href="https://github.com/pamuz/ob-prompt" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: fixed; top: 0; border: 0; right: 0; z-index: 1000;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+<a href="https://github.com/slashpablo/ob-prompt" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: fixed; top: 0; border: 0; right: 0; z-index: 1000;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
 <style>.support-fab,.support-fab:visited,.support-fab:link{position:fixed;bottom:28px;right:28px;z-index:1000;background:rgba(0,0,0,.45);color:#fff;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px;font-weight:500;padding:8px 14px;border-radius:50px;box-shadow:0 1px 4px rgba(0,0,0,.15);opacity:.6;transition:opacity .2s,box-shadow .2s}.support-fab:hover{opacity:1;box-shadow:0 2px 8px rgba(0,0,0,.25);color:#fff}@media(max-width:500px){.support-fab,.support-fab:visited,.support-fab:link{bottom:16px;right:16px;padding:6px 12px;font-size:12px}}</style>
 <a href="https://www.patreon.com/c/slashpablo" class="support-fab" aria-label="Support this project">&#9829; Support</a>
 </head>
@@ -33,72 +33,72 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org76ef330">1. Introduction</a></li>
-<li><a href="#org323e899">2. Quick Start</a></li>
-<li><a href="#org10ff031">3. Header Arguments</a>
+<li><a href="#org78ae677">1. Introduction</a></li>
+<li><a href="#org8e66a88">2. Quick Start</a></li>
+<li><a href="#org26f432f">3. Header Arguments</a>
 <ul>
-<li><a href="#orgefef960">3.1. Custom Header Arguments</a></li>
-<li><a href="#orgf41dc87">3.2. Default Header Arguments</a></li>
+<li><a href="#orgdeeb17c">3.1. Custom Header Arguments</a></li>
+<li><a href="#org818b469">3.2. Default Header Arguments</a></li>
 </ul>
 </li>
-<li><a href="#org28bcfdb">4. Building Messages</a>
+<li><a href="#orga710202">4. Building Messages</a>
 <ul>
-<li><a href="#orgad28a6a">4.1. Example</a></li>
+<li><a href="#org8b7cd2c">4.1. Example</a></li>
 </ul>
 </li>
-<li><a href="#orgc64432f">5. Building the Request Payload</a>
+<li><a href="#orgc5f464c">5. Building the Request Payload</a>
 <ul>
-<li><a href="#orgab0938c">5.1. Example</a></li>
+<li><a href="#org7b6ffe0">5.1. Example</a></li>
 </ul>
 </li>
-<li><a href="#org1b5d5df">6. Parsing the Response</a>
+<li><a href="#orgda86e22">6. Parsing the Response</a>
 <ul>
-<li><a href="#org48f4452">6.1. Example</a></li>
+<li><a href="#org700bde6">6.1. Example</a></li>
 </ul>
 </li>
-<li><a href="#org76a0ed4">7. Sending the Request</a>
+<li><a href="#orgd70ddd0">7. Sending the Request</a>
 <ul>
-<li><a href="#org898a85b">7.1. ASCII-safe JSON Encoding</a></li>
-<li><a href="#orgf08320a">7.2. HTTP Transport</a></li>
+<li><a href="#org53a7ec0">7.1. ASCII-safe JSON Encoding</a></li>
+<li><a href="#org069b3ad">7.2. HTTP Transport</a></li>
 </ul>
 </li>
-<li><a href="#orgf2e561a">8. The Core Execution Function</a>
+<li><a href="#orgabe39e3">8. The Core Execution Function</a>
 <ul>
-<li><a href="#orga5f05f1">8.1. Debug Formatting</a></li>
-<li><a href="#org1a8ca94">8.2. Example</a></li>
+<li><a href="#orgf981092">8.1. Debug Formatting</a></li>
+<li><a href="#org5f03bff">8.2. Example</a></li>
 </ul>
 </li>
-<li><a href="#orgfa5b925">9. Variable Expansion</a></li>
-<li><a href="#org19f77ef">10. Session Support (stub)</a></li>
-<li><a href="#org8f4862b">11. Running Tests</a></li>
-<li><a href="#org69750c6">12. Example Usage</a>
+<li><a href="#org8f86d4c">9. Variable Expansion</a></li>
+<li><a href="#orgf9718e9">10. Session Support (stub)</a></li>
+<li><a href="#org4da5f87">11. Running Tests</a></li>
+<li><a href="#org14183ab">12. Example Usage</a>
 <ul>
-<li><a href="#org5442bdc">12.1. Basic prompt</a></li>
-<li><a href="#orge95bdf0">12.2. With a system prompt</a></li>
-<li><a href="#org157265f">12.3. With variables from other blocks</a></li>
-<li><a href="#orgea302a5">12.4. Using :preamble for document context</a></li>
-<li><a href="#orgcbae6ea">12.5. Debug mode</a></li>
+<li><a href="#orgd0e4aee">12.1. Basic prompt</a></li>
+<li><a href="#org6427ae5">12.2. With a system prompt</a></li>
+<li><a href="#orga76187a">12.3. With variables from other blocks</a></li>
+<li><a href="#orgce9a090">12.4. Using :preamble for document context</a></li>
+<li><a href="#org797b7a3">12.5. Debug mode</a></li>
 </ul>
 </li>
-<li><a href="#orgcc509d3">13. File Assembly</a>
+<li><a href="#org926d419">13. File Assembly</a>
 <ul>
-<li><a href="#orga6a5153">13.1. File header</a></li>
-<li><a href="#orged43499">13.2. Provide</a></li>
-<li><a href="#orge583f2b">13.3. Tangled output</a></li>
+<li><a href="#org6e835be">13.1. File header</a></li>
+<li><a href="#org032b230">13.2. Provide</a></li>
+<li><a href="#orgeed9a71">13.3. Tangled output</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org76ef330" class="outline-2">
-<h2 id="org76ef330"><span class="section-number-2">1.</span> Introduction</h2>
+<div id="outline-container-org78ae677" class="outline-2">
+<h2 id="org78ae677"><span class="section-number-2">1.</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <code>ob-prompt</code> turns Org Babel into a lightweight, reproducible interface
 for large language models.  A prompt is just a src block:
 </p>
 
-<pre class="example" id="org8ab5b30">
+<pre class="example" id="orgf006463">
 #+begin_src prompt :model claude-sonnet-4-5-20250929
 Explain monads in simple terms.
 #+end_src
@@ -112,22 +112,22 @@ with the rest of Org.
 </p>
 </div>
 </div>
-<div id="outline-container-org323e899" class="outline-2">
-<h2 id="org323e899"><span class="section-number-2">2.</span> Quick Start</h2>
+<div id="outline-container-org8e66a88" class="outline-2">
+<h2 id="org8e66a88"><span class="section-number-2">2.</span> Quick Start</h2>
 <div class="outline-text-2" id="text-2">
 <p>
-Get the code from <a href="https://github.com/pamuz/ob-prompt">GitHub</a> and add one of the following to your Emacs configuration:
+Get the code from <a href="https://github.com/slashpablo/ob-prompt">GitHub</a> and add one of the following to your Emacs configuration:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;; </span><span class="org-comment">Option A: via org-babel-load-languages (requires ob-prompt.el on load-path)
+<pre class="src src-emacs-lisp"><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Option A: via org-babel-load-languages (requires ob-prompt.el on load-path)
 </span>(org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
    (prompt . t)))
 
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Option B: just load the file directly
-</span>(<span class="org-keyword">require</span> '<span class="org-constant">ob-prompt</span>)
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Option B: just load the file directly
+</span>(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">ob-prompt</span>)
 </pre>
 </div>
 
@@ -135,7 +135,7 @@ Get the code from <a href="https://github.com/pamuz/ob-prompt">GitHub</a> and ad
 Then write a prompt block and press <code>C-c C-c</code>:
 </p>
 
-<pre class="example" id="orga3bf998">
+<pre class="example" id="orga507dc9">
 #+begin_src prompt :model claude-sonnet-4-5-20250929
 Explain monads in simple terms.
 #+end_src
@@ -149,12 +149,12 @@ automated test suite lives separately in <code>ob-prompt-test.el</code>.
 </p>
 </div>
 </div>
-<div id="outline-container-org10ff031" class="outline-2">
-<h2 id="org10ff031"><span class="section-number-2">3.</span> Header Arguments</h2>
+<div id="outline-container-org26f432f" class="outline-2">
+<h2 id="org26f432f"><span class="section-number-2">3.</span> Header Arguments</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orgefef960" class="outline-3">
-<h3 id="orgefef960"><span class="section-number-3">3.1.</span> Custom Header Arguments</h3>
+<div id="outline-container-orgdeeb17c" class="outline-3">
+<h3 id="orgdeeb17c"><span class="section-number-3">3.1.</span> Custom Header Arguments</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 These are the prompt-specific header arguments.  Babel merges them
@@ -168,20 +168,20 @@ whether it is declared - but listing them explicitly is good hygiene.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgf205db0">(<span class="org-keyword">defconst</span> <span class="org-variable-name">org-babel-header-args:prompt</span>
-  '((model    . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">LLM model identifier
-</span>    (system   . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">system prompt string
-</span>    (endpoint . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">API endpoint URL
-</span>    (api-key  . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">API key (string or evaluated form)
-</span>    (preamble . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">include buffer content above block as context
-</span>    (debug    . <span class="org-builtin">:any</span>))  <span class="org-comment-delimiter">;; </span><span class="org-comment">return raw request/response instead of content
-</span>  <span class="org-doc">"Prompt-specific header arguments for ob-prompt."</span>)
+<pre class="src src-emacs-lisp" id="org59ebd53">(<span style="color: #D83441;">defconst</span> <span style="color: #86e7d7;">org-babel-header-args:prompt</span>
+  '((model    . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">LLM model identifier
+</span>    (system   . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">system prompt string
+</span>    (endpoint . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">API endpoint URL
+</span>    (api-key  . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">API key (string or evaluated form)
+</span>    (preamble . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">include buffer content above block as context
+</span>    (debug    . <span style="color: #3679D8;">:any</span>))  <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">return raw request/response instead of content
+</span>  <span style="color: #9ae168; font-style: italic;">"Prompt-specific header arguments for ob-prompt."</span>)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf41dc87" class="outline-3">
-<h3 id="orgf41dc87"><span class="section-number-3">3.2.</span> Default Header Arguments</h3>
+<div id="outline-container-org818b469" class="outline-3">
+<h3 id="org818b469"><span class="section-number-3">3.2.</span> Default Header Arguments</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 When no header arguments are provided, the following defaults
@@ -191,20 +191,20 @@ and reproducible.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgca59f62">(<span class="org-keyword">defvar</span> <span class="org-variable-name">org-babel-default-header-args:prompt</span>
-  '((<span class="org-builtin">:results</span> . <span class="org-string">"raw"</span>)
-    (<span class="org-builtin">:exports</span> . <span class="org-string">"both"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Make sures both prompt and result are exported
-</span>    (<span class="org-builtin">:eval</span> . <span class="org-string">"no-export"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not re-evaluate prompt blocks on export
-</span>    (<span class="org-builtin">:wrap</span> . <span class="org-string">"assistant"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide concrete boundries to responses
-</span>    (<span class="org-builtin">:noweb</span> . <span class="org-string">"yes"</span>)) <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable &lt;&lt;block-name&gt;&gt; inclusion by default
-</span>  <span class="org-doc">"Default header arguments for prompt src blocks."</span>)
+<pre class="src src-emacs-lisp" id="org0195b48">(<span style="color: #D83441;">defvar</span> <span style="color: #86e7d7;">org-babel-default-header-args:prompt</span>
+  '((<span style="color: #3679D8;">:results</span> . <span style="color: #79D836;">"raw"</span>)
+    (<span style="color: #3679D8;">:exports</span> . <span style="color: #79D836;">"both"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Make sures both prompt and result are exported
+</span>    (<span style="color: #3679D8;">:eval</span> . <span style="color: #79D836;">"no-export"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Do not re-evaluate prompt blocks on export
+</span>    (<span style="color: #3679D8;">:wrap</span> . <span style="color: #79D836;">"assistant"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Provide concrete boundries to responses
+</span>    (<span style="color: #3679D8;">:noweb</span> . <span style="color: #79D836;">"yes"</span>)) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Enable &lt;&lt;block-name&gt;&gt; inclusion by default
+</span>  <span style="color: #9ae168; font-style: italic;">"Default header arguments for prompt src blocks."</span>)
 </pre>
 </div>
 </div>
 </div>
 </div>
-<div id="outline-container-org28bcfdb" class="outline-2">
-<h2 id="org28bcfdb"><span class="section-number-2">4.</span> Building Messages</h2>
+<div id="outline-container-orga710202" class="outline-2">
+<h2 id="orga710202"><span class="section-number-2">4.</span> Building Messages</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 The <code>messages</code> array is the core data structure sent to any
@@ -214,20 +214,20 @@ ready for <code>json-encode</code>.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgdcc17c5">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--build-messages</span> (body <span class="org-type">&amp;optional</span> system preamble-text)
-  <span class="org-doc">"Build the messages vector for the API request.
+<pre class="src src-emacs-lisp" id="org6220aa1">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--build-messages</span> (body <span style="color: #3679D8;">&amp;optional</span> system preamble-text)
+  <span style="color: #9ae168; font-style: italic;">"Build the messages vector for the API request.
 BODY is the user's prompt text.
 SYSTEM, when non-nil, becomes a system message.
 PREAMBLE-TEXT, when non-nil, is wrapped in &lt;context&gt; tags
 and prepended to the user message."</span>
-  (<span class="org-keyword">let</span> ((user-content (<span class="org-keyword">if</span> preamble-text
-                          (format <span class="org-string">"&lt;context&gt;\n%s\n&lt;/context&gt;\n\n%s"</span>
+  (<span style="color: #D83441;">let</span> ((user-content (<span style="color: #D83441;">if</span> preamble-text
+                          (format <span style="color: #79D836;">"&lt;context&gt;\n%s\n&lt;/context&gt;\n\n%s"</span>
                                   preamble-text body)
                         body))
         (messages '()))
-    (<span class="org-keyword">when</span> system
-      (<span class="org-keyword">push</span> `((role . <span class="org-string">"system"</span>) (content . ,system)) messages))
-    (<span class="org-keyword">push</span> `((role . <span class="org-string">"user"</span>) (content . ,user-content)) messages)
+    (<span style="color: #D83441;">when</span> system
+      (<span style="color: #D83441;">push</span> `((role . <span style="color: #79D836;">"system"</span>) (content . ,system)) messages))
+    (<span style="color: #D83441;">push</span> `((role . <span style="color: #79D836;">"user"</span>) (content . ,user-content)) messages)
     (vconcat (nreverse messages))))
 </pre>
 </div>
@@ -237,7 +237,7 @@ and prepended to the user message."</span>
 </pre>
 </div>
 
-<div class="assistant" id="orgd7d9410">
+<div class="assistant" id="orgdc7e6e5">
 <p>
 In short: to return the messages in the correct order as a vector.
 </p>
@@ -269,7 +269,7 @@ disambiguate. Correct?
 </pre>
 </div>
 
-<div class="assistant" id="orgb1bfe77">
+<div class="assistant" id="org0bdb2fb">
 <p>
 Yes — that’s exactly right.
 </p>
@@ -303,8 +303,8 @@ malformed structure rather than the required array.
 
 </div>
 </div>
-<div id="outline-container-orgad28a6a" class="outline-3">
-<h3 id="orgad28a6a"><span class="section-number-3">4.1.</span> Example</h3>
+<div id="outline-container-org8b7cd2c" class="outline-3">
+<h3 id="org8b7cd2c"><span class="section-number-3">4.1.</span> Example</h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 All three options together — system prompt, preamble context, and
@@ -313,13 +313,13 @@ body.  <code>C-c C-c</code> to see the exact message array that would be sent:
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(ob-prompt--build-messages
- <span class="org-string">"What patterns do you see?"</span>
- <span class="org-string">"You are a code reviewer."</span>
- <span class="org-string">"* Header\nSome earlier buffer content..."</span>)
+ <span style="color: #79D836;">"What patterns do you see?"</span>
+ <span style="color: #79D836;">"You are a code reviewer."</span>
+ <span style="color: #79D836;">"* Header\nSome earlier buffer content..."</span>)
 </pre>
 </div>
 
-<pre class="example" id="orgb6cc06c">
+<pre class="example" id="org2758c09">
 [((role . "system") (content . "You are a code reviewer."))
  ((role . "user")
   (content
@@ -328,8 +328,8 @@ body.  <code>C-c C-c</code> to see the exact message array that would be sent:
 </div>
 </div>
 </div>
-<div id="outline-container-orgc64432f" class="outline-2">
-<h2 id="orgc64432f"><span class="section-number-2">5.</span> Building the Request Payload</h2>
+<div id="outline-container-orgc5f464c" class="outline-2">
+<h2 id="orgc5f464c"><span class="section-number-2">5.</span> Building the Request Payload</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 The payload is the top-level JSON object sent to the API.  Keeping
@@ -338,18 +338,18 @@ without touching the network.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org1074ba5">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--build-payload</span> (model messages)
-  <span class="org-doc">"Build the JSON-ready alist for the API request.
+<pre class="src src-emacs-lisp" id="org4a87af5">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--build-payload</span> (model messages)
+  <span style="color: #9ae168; font-style: italic;">"Build the JSON-ready alist for the API request.
 MODEL is the model identifier string.
-MESSAGES is the vector returned by `</span><span class="org-doc"><span class="org-constant">ob-prompt--build-messages</span></span><span class="org-doc">'."</span>
-  `((<span class="org-string">"model"</span> . ,model)
-    (<span class="org-string">"max_completion_tokens"</span> . 16384)
-    (<span class="org-string">"messages"</span> . ,messages)))
+MESSAGES is the vector returned by `</span><span style="color: #8041D8; font-style: italic;">ob-prompt--build-messages</span><span style="color: #9ae168; font-style: italic;">'."</span>
+  `((<span style="color: #79D836;">"model"</span> . ,model)
+    (<span style="color: #79D836;">"max_completion_tokens"</span> . 16384)
+    (<span style="color: #79D836;">"messages"</span> . ,messages)))
 </pre>
 </div>
 </div>
-<div id="outline-container-orgab0938c" class="outline-3">
-<h3 id="orgab0938c"><span class="section-number-3">5.1.</span> Example</h3>
+<div id="outline-container-org7b6ffe0" class="outline-3">
+<h3 id="org7b6ffe0"><span class="section-number-3">5.1.</span> Example</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 The full payload, ready to be passed to <code>json-encode</code>:
@@ -357,20 +357,20 @@ The full payload, ready to be passed to <code>json-encode</code>:
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(ob-prompt--build-payload
- <span class="org-string">"gpt-4"</span>
- (ob-prompt--build-messages <span class="org-string">"Explain monads."</span>))
+ <span style="color: #79D836;">"gpt-4"</span>
+ (ob-prompt--build-messages <span style="color: #79D836;">"Explain monads."</span>))
 </pre>
 </div>
 
-<pre class="example" id="org7a802cf">
+<pre class="example" id="orga6d703d">
 (("model" . "gpt-4") ("max_completion_tokens" . 16384)
  ("messages" . [((role . "user") (content . "Explain monads."))]))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org1b5d5df" class="outline-2">
-<h2 id="org1b5d5df"><span class="section-number-2">6.</span> Parsing the Response</h2>
+<div id="outline-container-orgda86e22" class="outline-2">
+<h2 id="orgda86e22"><span class="section-number-2">6.</span> Parsing the Response</h2>
 <div class="outline-text-2" id="text-6">
 <p>
 The API returns a JSON object with a <code>choices</code> array.  This helper
@@ -379,24 +379,24 @@ response is malformed or contains an API error.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgadafab1">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--parse-response</span> (json-string)
-  <span class="org-doc">"Extract the assistant's message content from JSON-STRING.
-Signals `</span><span class="org-doc"><span class="org-constant">user-error</span></span><span class="org-doc">' if the response indicates an API error
+<pre class="src src-emacs-lisp" id="org1bde589">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--parse-response</span> (json-string)
+  <span style="color: #9ae168; font-style: italic;">"Extract the assistant's message content from JSON-STRING.
+Signals `</span><span style="color: #8041D8; font-style: italic;">user-error</span><span style="color: #9ae168; font-style: italic;">' if the response indicates an API error
 or has an unexpected structure."</span>
-  (<span class="org-keyword">let*</span> ((data (<span class="org-keyword">condition-case</span> err
+  (<span style="color: #D83441;">let*</span> ((data (<span style="color: #D83441;">condition-case</span> err
                    (json-read-from-string json-string)
                  (json-error
-                  (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: failed to parse response JSON: %s"</span>
+                  (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: failed to parse response JSON: %s"</span>
                               (error-message-string err)))))
          (err-msg (alist-get 'message (alist-get 'error data))))
-    (<span class="org-keyword">when</span> err-msg
-      (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: API error: %s"</span> err-msg))
-    (<span class="org-keyword">condition-case</span> nil
+    (<span style="color: #D83441;">when</span> err-msg
+      (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: API error: %s"</span> err-msg))
+    (<span style="color: #D83441;">condition-case</span> nil
         (alist-get 'content
                    (alist-get 'message
                               (aref (alist-get 'choices data) 0)))
-      (<span class="org-warning">error</span>
-       (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: unexpected response structure: %s"</span>
+      (<span style="color: #D85F00;">error</span>
+       (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: unexpected response structure: %s"</span>
                    (truncate-string-to-width json-string 200))))))
 </pre>
 </div>
@@ -407,7 +407,7 @@ other than 0? I've never seen it.
 </pre>
 </div>
 
-<div class="assistant" id="orgfc72342">
+<div class="assistant" id="org38f4604">
 <p>
 In practice, almost never — and for your use case, you can safely
 assume index 0.
@@ -459,8 +459,8 @@ indexing `[0]` is exactly right.
 
 </div>
 </div>
-<div id="outline-container-org48f4452" class="outline-3">
-<h3 id="org48f4452"><span class="section-number-3">6.1.</span> Example</h3>
+<div id="outline-container-org700bde6" class="outline-3">
+<h3 id="org700bde6"><span class="section-number-3">6.1.</span> Example</h3>
 <div class="outline-text-3" id="text-6-1">
 <p>
 Parsing a realistic API response — you can see exactly what gets
@@ -469,22 +469,22 @@ extracted:
 
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(ob-prompt--parse-response
- <span class="org-string">"{\"id\":\"chatcmpl-abc\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"A monad is a design pattern.\"}}]}"</span>)
+ <span style="color: #79D836;">"{\"id\":\"chatcmpl-abc\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"A monad is a design pattern.\"}}]}"</span>)
 </pre>
 </div>
 
-<pre class="example" id="org1a20340">
+<pre class="example" id="org8dc211f">
 A monad is a design pattern.
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org76a0ed4" class="outline-2">
-<h2 id="org76a0ed4"><span class="section-number-2">7.</span> Sending the Request</h2>
+<div id="outline-container-orgd70ddd0" class="outline-2">
+<h2 id="orgd70ddd0"><span class="section-number-2">7.</span> Sending the Request</h2>
 <div class="outline-text-2" id="text-7">
 </div>
-<div id="outline-container-org898a85b" class="outline-3">
-<h3 id="org898a85b"><span class="section-number-3">7.1.</span> ASCII-safe JSON Encoding</h3>
+<div id="outline-container-org53a7ec0" class="outline-3">
+<h3 id="org53a7ec0"><span class="section-number-3">7.1.</span> ASCII-safe JSON Encoding</h3>
 <div class="outline-text-3" id="text-7-1">
 <p>
 <code>url-http-create-request</code> rejects any request whose <code>string-bytes</code>
@@ -496,47 +496,47 @@ parser decodes these transparently.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org46d2491">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--json-encode-ascii</span> (object)
-  <span class="org-doc">"Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
-This avoids `</span><span class="org-doc"><span class="org-constant">url-http-create-request</span></span><span class="org-doc">' failing with
+<pre class="src src-emacs-lisp" id="org9bd63d5">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--json-encode-ascii</span> (object)
+  <span style="color: #9ae168; font-style: italic;">"Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
+This avoids `</span><span style="color: #8041D8; font-style: italic;">url-http-create-request</span><span style="color: #9ae168; font-style: italic;">' failing with
 \"Multibyte text in HTTP request\" (Emacs Bug#23750)."</span>
-  (<span class="org-keyword">let</span> ((json (json-encode object)))
+  (<span style="color: #D83441;">let</span> ((json (json-encode object)))
     (replace-regexp-in-string
-     <span class="org-string">"[</span><span class="org-string"><span class="org-negation-char">^</span></span><span class="org-string">\x00-\x7f]"</span>
-     (<span class="org-keyword">lambda</span> (char)
-       (format <span class="org-string">"\\u%04x"</span> (string-to-char char)))
+     <span style="color: #79D836;">"[</span><span style="color: #3679D8; font-weight: bold;">^</span><span style="color: #79D836;">\x00-\x7f]"</span>
+     (<span style="color: #D83441;">lambda</span> (char)
+       (format <span style="color: #79D836;">"\\u%04x"</span> (string-to-char char)))
      json nil t)))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orgf08320a" class="outline-3">
-<h3 id="orgf08320a"><span class="section-number-3">7.2.</span> HTTP Transport</h3>
+<div id="outline-container-org069b3ad" class="outline-3">
+<h3 id="org069b3ad"><span class="section-number-3">7.2.</span> HTTP Transport</h3>
 <div class="outline-text-3" id="text-7-2">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgccc4982">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--request</span> (endpoint api-key payload)
-  <span class="org-doc">"Send PAYLOAD to ENDPOINT using API-KEY via built-in `</span><span class="org-doc"><span class="org-constant">url</span></span><span class="org-doc">'.
+<pre class="src src-emacs-lisp" id="orge2b2fec">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--request</span> (endpoint api-key payload)
+  <span style="color: #9ae168; font-style: italic;">"Send PAYLOAD to ENDPOINT using API-KEY via built-in `</span><span style="color: #8041D8; font-style: italic;">url</span><span style="color: #9ae168; font-style: italic;">'.
 Returns the response body as a string.
-Signals `</span><span class="org-doc"><span class="org-constant">user-error</span></span><span class="org-doc">' on HTTP or transport errors."</span>
-  (<span class="org-keyword">let*</span> ((url-request-method <span class="org-string">"POST"</span>)
+Signals `</span><span style="color: #8041D8; font-style: italic;">user-error</span><span style="color: #9ae168; font-style: italic;">' on HTTP or transport errors."</span>
+  (<span style="color: #D83441;">let*</span> ((url-request-method <span style="color: #79D836;">"POST"</span>)
          (url-request-extra-headers
-          `((<span class="org-string">"Content-Type"</span> . <span class="org-string">"application/json"</span>)
-            (<span class="org-string">"Authorization"</span> . ,(concat <span class="org-string">"Bearer "</span> api-key))))
+          `((<span style="color: #79D836;">"Content-Type"</span> . <span style="color: #79D836;">"application/json"</span>)
+            (<span style="color: #79D836;">"Authorization"</span> . ,(concat <span style="color: #79D836;">"Bearer "</span> api-key))))
          (url-request-data (ob-prompt--json-encode-ascii payload))
          (buffer (url-retrieve-synchronously endpoint t t 300)))
-    (<span class="org-keyword">unless</span> buffer
-      (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: request failed (no response buffer)"</span>))
-    (<span class="org-keyword">with-current-buffer</span> buffer
-      (<span class="org-keyword">unwind-protect</span>
-       (<span class="org-keyword">progn</span>
+    (<span style="color: #D83441;">unless</span> buffer
+      (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: request failed (no response buffer)"</span>))
+    (<span style="color: #D83441;">with-current-buffer</span> buffer
+      (<span style="color: #D83441;">unwind-protect</span>
+       (<span style="color: #D83441;">progn</span>
          (goto-char (point-min))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Check HTTP status
-</span>         (<span class="org-keyword">unless</span> (looking-at <span class="org-string">"HTTP/.* 200"</span>)
-           (re-search-forward <span class="org-string">"^HTTP/.* </span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">(</span></span><span class="org-string">[0-9]+</span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">)</span></span><span class="org-string">"</span> nil t)
-           (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: HTTP error %s"</span>
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Check HTTP status
+</span>         (<span style="color: #D83441;">unless</span> (looking-at <span style="color: #79D836;">"HTTP/.* 200"</span>)
+           (re-search-forward <span style="color: #79D836;">"^HTTP/.* </span><span style="color: #3679D8; font-weight: bold;">\\</span><span style="color: #3679D8; font-weight: bold;">(</span><span style="color: #79D836;">[0-9]+</span><span style="color: #3679D8; font-weight: bold;">\\</span><span style="color: #3679D8; font-weight: bold;">)</span><span style="color: #79D836;">"</span> nil t)
+           (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: HTTP error %s"</span>
                        (match-string 1)))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Skip headers
-</span>         (re-search-forward <span class="org-string">"\r?\n\r?\n"</span> nil 'move)
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Skip headers
+</span>         (re-search-forward <span style="color: #79D836;">"\r?\n\r?\n"</span> nil 'move)
          (decode-coding-string
           (buffer-substring-no-properties (point) (point-max))
           'utf-8))
@@ -546,8 +546,8 @@ Signals `</span><span class="org-doc"><span class="org-constant">user-error</spa
 </div>
 </div>
 </div>
-<div id="outline-container-orgf2e561a" class="outline-2">
-<h2 id="orgf2e561a"><span class="section-number-2">8.</span> The Core Execution Function</h2>
+<div id="outline-container-orgabe39e3" class="outline-2">
+<h2 id="orgabe39e3"><span class="section-number-2">8.</span> The Core Execution Function</h2>
 <div class="outline-text-2" id="text-8">
 <p>
 This is what Babel calls when you press <code>C-c C-c</code> on a <code>prompt</code>
@@ -556,38 +556,38 @@ above.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org978f8b7">(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-execute:prompt</span> (body params)
-  <span class="org-doc">"Execute a prompt BODY with PARAMS via Org Babel.
+<pre class="src src-emacs-lisp" id="org2bc7004">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-execute:prompt</span> (body params)
+  <span style="color: #9ae168; font-style: italic;">"Execute a prompt BODY with PARAMS via Org Babel.
 Sends the prompt to the configured LLM endpoint and returns
 the response text."</span>
-  (<span class="org-keyword">let*</span> ((model    (cdr (assq <span class="org-builtin">:model</span> params)))
-         (endpoint (cdr (assq <span class="org-builtin">:endpoint</span> params)))
-         (api-key  (cdr (assq <span class="org-builtin">:api-key</span> params)))
-         (system   (cdr (assq <span class="org-builtin">:system</span> params)))
-         (preamble (cdr (assq <span class="org-builtin">:preamble</span> params)))
-         (debug    (cdr (assq <span class="org-builtin">:debug</span> params)))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Gather buffer text above this src block when :preamble is set
+  (<span style="color: #D83441;">let*</span> ((model    (cdr (assq <span style="color: #3679D8;">:model</span> params)))
+         (endpoint (cdr (assq <span style="color: #3679D8;">:endpoint</span> params)))
+         (api-key  (cdr (assq <span style="color: #3679D8;">:api-key</span> params)))
+         (system   (cdr (assq <span style="color: #3679D8;">:system</span> params)))
+         (preamble (cdr (assq <span style="color: #3679D8;">:preamble</span> params)))
+         (debug    (cdr (assq <span style="color: #3679D8;">:debug</span> params)))
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Gather buffer text above this src block when :preamble is set
 </span>         (preamble-text
-          (<span class="org-keyword">when</span> (equal preamble <span class="org-string">"yes"</span>)
-            (<span class="org-keyword">let</span> ((src-block (org-element-at-point)))
+          (<span style="color: #D83441;">when</span> (equal preamble <span style="color: #79D836;">"yes"</span>)
+            (<span style="color: #D83441;">let</span> ((src-block (org-element-at-point)))
               (buffer-substring-no-properties
                (point-min)
-               (org-element-property <span class="org-builtin">:begin</span> src-block)))))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Expand :var references in the body
+               (org-element-property <span style="color: #3679D8;">:begin</span> src-block)))))
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Expand :var references in the body
 </span>         (expanded-body (org-babel-expand-body:prompt body params))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Assemble the request
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Assemble the request
 </span>         (messages (ob-prompt--build-messages
                     expanded-body system preamble-text))
          (payload  (ob-prompt--build-payload model messages)))
-    (<span class="org-keyword">if</span> (equal debug <span class="org-string">"yes"</span>)
+    (<span style="color: #D83441;">if</span> (equal debug <span style="color: #79D836;">"yes"</span>)
         (ob-prompt--format-debug endpoint api-key payload)
       (ob-prompt--parse-response
        (ob-prompt--request endpoint api-key payload)))))
 </pre>
 </div>
 </div>
-<div id="outline-container-orga5f05f1" class="outline-3">
-<h3 id="orga5f05f1"><span class="section-number-3">8.1.</span> Debug Formatting</h3>
+<div id="outline-container-orgf981092" class="outline-3">
+<h3 id="orgf981092"><span class="section-number-3">8.1.</span> Debug Formatting</h3>
 <div class="outline-text-3" id="text-8-1">
 <p>
 When <code>:debug yes</code> is set, instead of calling the API we return a
@@ -595,36 +595,36 @@ human-readable dump of what <i>would</i> be sent.  The API key is redacted.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org7bdb4d7">(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--format-debug</span> (endpoint api-key payload)
-  <span class="org-doc">"Format a debug representation of the request.
+<pre class="src src-emacs-lisp" id="orgf7018ed">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--format-debug</span> (endpoint api-key payload)
+  <span style="color: #9ae168; font-style: italic;">"Format a debug representation of the request.
 Redacts API-KEY to show only the first and last 4 characters."</span>
-  (<span class="org-keyword">let</span> ((redacted (<span class="org-keyword">if</span> (<span class="org-keyword">and</span> api-key (&gt; (length api-key) 8))
+  (<span style="color: #D83441;">let</span> ((redacted (<span style="color: #D83441;">if</span> (<span style="color: #D83441;">and</span> api-key (&gt; (length api-key) 8))
                       (concat (substring api-key 0 4)
-                              <span class="org-string">"..."</span>
+                              <span style="color: #79D836;">"..."</span>
                               (substring api-key -4))
-                    <span class="org-string">"****"</span>)))
-    (format <span class="org-string">"endpoint: %s\napi-key:  %s\npayload:\n%s"</span>
+                    <span style="color: #79D836;">"****"</span>)))
+    (format <span style="color: #79D836;">"endpoint: %s\napi-key:  %s\npayload:\n%s"</span>
             endpoint redacted
             (json-encode payload))))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org1a8ca94" class="outline-3">
-<h3 id="org1a8ca94"><span class="section-number-3">8.2.</span> Example</h3>
+<div id="outline-container-org5f03bff" class="outline-3">
+<h3 id="org5f03bff"><span class="section-number-3">8.2.</span> Example</h3>
 <div class="outline-text-3" id="text-8-2">
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">(princ
  (ob-prompt--format-debug
-  <span class="org-string">"https://api.openai.com/v1/chat/completions"</span>
-  <span class="org-string">"sk-1234567890abcdef"</span>
+  <span style="color: #79D836;">"https://api.openai.com/v1/chat/completions"</span>
+  <span style="color: #79D836;">"sk-1234567890abcdef"</span>
   (ob-prompt--build-payload
-   <span class="org-string">"gpt-4"</span>
-   (ob-prompt--build-messages <span class="org-string">"Hello"</span>))))
+   <span style="color: #79D836;">"gpt-4"</span>
+   (ob-prompt--build-messages <span style="color: #79D836;">"Hello"</span>))))
 </pre>
 </div>
 
-<pre class="example" id="org9638e8b">
+<pre class="example" id="org65c06aa">
 endpoint: https://api.openai.com/v1/chat/completions
 api-key:  sk-1...cdef
 payload:
@@ -633,8 +633,8 @@ payload:
 </div>
 </div>
 </div>
-<div id="outline-container-orgfa5b925" class="outline-2">
-<h2 id="orgfa5b925"><span class="section-number-2">9.</span> Variable Expansion</h2>
+<div id="outline-container-org8f86d4c" class="outline-2">
+<h2 id="org8f86d4c"><span class="section-number-2">9.</span> Variable Expansion</h2>
 <div class="outline-text-2" id="text-9">
 <p>
 When you write <code>:var code=my-block</code>, Babel resolves the named
@@ -645,23 +645,23 @@ behaviour of prepending <code>name=value</code> lines.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgacbc59d">(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-expand-body:prompt</span> (body params)
-  <span class="org-doc">"Expand BODY for a prompt block by substituting :var references.
+<pre class="src src-emacs-lisp" id="org959e243">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-expand-body:prompt</span> (body params)
+  <span style="color: #9ae168; font-style: italic;">"Expand BODY for a prompt block by substituting :var references.
 Each :var binding replaces $name in BODY with the variable's value."</span>
-  (<span class="org-keyword">let</span> ((expanded body))
-    (<span class="org-keyword">dolist</span> (pair (org-babel--get-vars params) expanded)
-      (<span class="org-keyword">setq</span> expanded
+  (<span style="color: #D83441;">let</span> ((expanded body))
+    (<span style="color: #D83441;">dolist</span> (pair (org-babel--get-vars params) expanded)
+      (<span style="color: #D83441;">setq</span> expanded
             (replace-regexp-in-string
-             (regexp-quote (format <span class="org-string">"$%s"</span> (car pair)))
-             (<span class="org-keyword">save-match-data</span> (format <span class="org-string">"%s"</span> (cdr pair)))
+             (regexp-quote (format <span style="color: #79D836;">"$%s"</span> (car pair)))
+             (<span style="color: #D83441;">save-match-data</span> (format <span style="color: #79D836;">"%s"</span> (cdr pair)))
              expanded
              t t)))))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org19f77ef" class="outline-2">
-<h2 id="org19f77ef"><span class="section-number-2">10.</span> Session Support (stub)</h2>
+<div id="outline-container-orgf9718e9" class="outline-2">
+<h2 id="orgf9718e9"><span class="section-number-2">10.</span> Session Support (stub)</h2>
 <div class="outline-text-2" id="text-10">
 <p>
 Babel requires <code>org-babel-prep-session:LANG</code> to exist.  Full
@@ -670,16 +670,16 @@ blocks) is a future enhancement.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="orgd3abedc">(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-prep-session:prompt</span> (_session _params)
-  <span class="org-doc">"Prepare a prompt session.
+<pre class="src src-emacs-lisp" id="orgbbf601a">(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-prep-session:prompt</span> (_session _params)
+  <span style="color: #9ae168; font-style: italic;">"Prepare a prompt session.
 Prompt sessions are not yet supported."</span>
-  (<span class="org-warning">error</span> <span class="org-string">"ob-prompt: sessions are not yet implemented"</span>))
+  (<span style="color: #D85F00;">error</span> <span style="color: #79D836;">"ob-prompt: sessions are not yet implemented"</span>))
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org8f4862b" class="outline-2">
-<h2 id="org8f4862b"><span class="section-number-2">11.</span> Running Tests</h2>
+<div id="outline-container-org4da5f87" class="outline-2">
+<h2 id="org4da5f87"><span class="section-number-2">11.</span> Running Tests</h2>
 <div class="outline-text-2" id="text-11">
 <p>
 The full ERT test suite lives in <code>ob-prompt-test.el</code> (not tangled
@@ -691,31 +691,31 @@ from this file).  Run it from the command line:
 </pre>
 </div>
 
-<pre class="example" id="orgea89f2d">
-Running 21 tests (2026-02-16 11:52:28-0800, selector ‘t’)
-   passed   1/21  ob-prompt-debug-no-calls-api (0.000093 sec)
-   passed   2/21  ob-prompt-debug-redacts-key (0.000025 sec)
-   passed   3/21  ob-prompt-debug-short-key (0.000014 sec)
+<pre class="example" id="org08727e9">
+Running 21 tests (2026-02-16 12:21:30-0800, selector ‘t’)
+   passed   1/21  ob-prompt-debug-no-calls-api (0.000096 sec)
+   passed   2/21  ob-prompt-debug-redacts-key (0.000026 sec)
+   passed   3/21  ob-prompt-debug-short-key (0.000015 sec)
    passed   4/21  ob-prompt-execute-debug-skips-http (0.000040 sec)
-   passed   5/21  ob-prompt-execute-round-trip (0.000045 sec)
-   passed   6/21  ob-prompt-expand-body-no-vars (0.000011 sec)
-   passed   7/21  ob-prompt-expand-body-substitutes-vars (0.000014 sec)
-   passed   8/21  ob-prompt-json-encode-ascii-escapes-non-ascii (0.000031 sec)
-   passed   9/21  ob-prompt-messages-body-only (0.000014 sec)
-   passed  10/21  ob-prompt-messages-nil-system-ignored (0.000011 sec)
-   passed  11/21  ob-prompt-messages-system-and-preamble (0.000014 sec)
-   passed  12/21  ob-prompt-messages-with-preamble (0.000013 sec)
-   passed  13/21  ob-prompt-messages-with-system (0.000012 sec)
-   passed  14/21  ob-prompt-parse-api-error (0.000024 sec)
-   passed  15/21  ob-prompt-parse-malformed-json (0.000304 sec)
-   passed  16/21  ob-prompt-parse-unexpected-structure (0.000024 sec)
-   passed  17/21  ob-prompt-parse-valid-response (0.000016 sec)
-   passed  18/21  ob-prompt-payload-basic (0.000012 sec)
-   passed  19/21  ob-prompt-preamble-no-disables-context (0.000033 sec)
-   passed  20/21  ob-prompt-request-decodes-utf8-response (0.000041 sec)
+   passed   5/21  ob-prompt-execute-round-trip (0.000051 sec)
+   passed   6/21  ob-prompt-expand-body-no-vars (0.000013 sec)
+   passed   7/21  ob-prompt-expand-body-substitutes-vars (0.000015 sec)
+   passed   8/21  ob-prompt-json-encode-ascii-escapes-non-ascii (0.000027 sec)
+   passed   9/21  ob-prompt-messages-body-only (0.000013 sec)
+   passed  10/21  ob-prompt-messages-nil-system-ignored (0.000026 sec)
+   passed  11/21  ob-prompt-messages-system-and-preamble (0.000018 sec)
+   passed  12/21  ob-prompt-messages-with-preamble (0.000015 sec)
+   passed  13/21  ob-prompt-messages-with-system (0.000014 sec)
+   passed  14/21  ob-prompt-parse-api-error (0.000028 sec)
+   passed  15/21  ob-prompt-parse-malformed-json (0.000324 sec)
+   passed  16/21  ob-prompt-parse-unexpected-structure (0.000027 sec)
+   passed  17/21  ob-prompt-parse-valid-response (0.000017 sec)
+   passed  18/21  ob-prompt-payload-basic (0.000013 sec)
+   passed  19/21  ob-prompt-preamble-no-disables-context (0.000039 sec)
+   passed  20/21  ob-prompt-request-decodes-utf8-response (0.000044 sec)
    passed  21/21  ob-prompt-request-sends-auth-header (0.000040 sec)
 
-Ran 21 tests, 21 results as expected, 0 unexpected (2026-02-16 11:52:28-0800, 0.001092 sec)
+Ran 21 tests, 21 results as expected, 0 unexpected (2026-02-16 12:21:30-0800, 0.001193 sec)
 
 </pre>
 
@@ -724,20 +724,20 @@ Or interactively from within Emacs:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp">(load-file <span class="org-string">"ob-prompt-test.el"</span>)
-(ert-run-tests-batch <span class="org-string">"^ob-prompt-"</span>)
+<pre class="src src-emacs-lisp">(load-file <span style="color: #79D836;">"ob-prompt-test.el"</span>)
+(ert-run-tests-batch <span style="color: #79D836;">"^ob-prompt-"</span>)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-org69750c6" class="outline-2">
-<h2 id="org69750c6"><span class="section-number-2">12.</span> Example Usage</h2>
+<div id="outline-container-org14183ab" class="outline-2">
+<h2 id="org14183ab"><span class="section-number-2">12.</span> Example Usage</h2>
 <div class="outline-text-2" id="text-12">
 </div>
-<div id="outline-container-org5442bdc" class="outline-3">
-<h3 id="org5442bdc"><span class="section-number-3">12.1.</span> Basic prompt</h3>
+<div id="outline-container-orgd0e4aee" class="outline-3">
+<h3 id="orgd0e4aee"><span class="section-number-3">12.1.</span> Basic prompt</h3>
 <div class="outline-text-3" id="text-12-1">
-<pre class="example" id="orgfcc933a">
+<pre class="example" id="orga527c9e">
 #+begin_src prompt :results raw
 How do LLMs improve literate programming?
 #+end_src
@@ -748,7 +748,7 @@ How do LLMs improve literate programming?
 </pre>
 </div>
 
-<div class="assistant" id="org0696a23">
+<div class="assistant" id="orga86d1d3">
 <p>
 LLMs improve literate programming mainly by tightening the feedback loop
 between explanation and implementation.
@@ -778,10 +778,10 @@ single source of truth.
 </div>
 </div>
 </div>
-<div id="outline-container-orge95bdf0" class="outline-3">
-<h3 id="orge95bdf0"><span class="section-number-3">12.2.</span> With a system prompt</h3>
+<div id="outline-container-org6427ae5" class="outline-3">
+<h3 id="org6427ae5"><span class="section-number-3">12.2.</span> With a system prompt</h3>
 <div class="outline-text-3" id="text-12-2">
-<pre class="example" id="orgeedeac8">
+<pre class="example" id="org542217d">
 #+begin_src prompt :system "You are a concise technical writer. Who speaks like a pirate..." :results raw
 How does emacs org mode support literate programming?
 #+end_src
@@ -792,7 +792,7 @@ How does emacs org mode support literate programming?
 </pre>
 </div>
 
-<div class="assistant" id="orgded0007">
+<div class="assistant" id="org186cf06">
 <p>
 Arrr, listen close, matey:
 </p>
@@ -820,8 +820,8 @@ So Org mode ain’t just holdin’ code — it tells the story of <b>why</b> the
 </div>
 </div>
 </div>
-<div id="outline-container-org157265f" class="outline-3">
-<h3 id="org157265f"><span class="section-number-3">12.3.</span> With variables from other blocks</h3>
+<div id="outline-container-orga76187a" class="outline-3">
+<h3 id="orga76187a"><span class="section-number-3">12.3.</span> With variables from other blocks</h3>
 <div class="outline-text-3" id="text-12-3">
 <p>
 Org Mode’s <a href="https://orgmode.org/manual/Noweb-Reference-Syntax.html">noweb</a> feature lets you reference other code blocks from
@@ -836,7 +836,7 @@ executed, those references are expanded in place, and the resolved
 content is sent as part of the prompt.
 </p>
 
-<pre class="example" id="org8e4a72a">
+<pre class="example" id="org8f8b78c">
 #+name: my-code
 #+begin_src python :exports none :python python3
 def fibonacci(n):
@@ -864,8 +864,8 @@ def fibonacci(n):
 </pre>
 </div>
 
-<div class="assistant" id="orgca0062e">
-<pre class="example" id="org4332eba">
+<div class="assistant" id="org3198f09">
+<pre class="example" id="org5f58f80">
 Here is a brief review with specific suggestions:
 
 1. **Function signature (line 1)**  
@@ -897,8 +897,8 @@ Here is a brief review with specific suggestions:
 </div>
 </div>
 </div>
-<div id="outline-container-orgea302a5" class="outline-3">
-<h3 id="orgea302a5"><span class="section-number-3">12.4.</span> Using :preamble for document context</h3>
+<div id="outline-container-orgce9a090" class="outline-3">
+<h3 id="orgce9a090"><span class="section-number-3">12.4.</span> Using :preamble for document context</h3>
 <div class="outline-text-3" id="text-12-4">
 <p>
 When <code>:preamble yes</code> is set, the entire buffer content above the
@@ -907,21 +907,21 @@ powerful for literate documents where earlier sections inform later
 prompts:
 </p>
 
-<pre class="example" id="orgf3cf3a7">
+<pre class="example" id="orgff10204">
 #+begin_src prompt :preamble yes :results drawer
 Given the code and discussion above, what edge cases are missing?
 #+end_src
 </pre>
 </div>
 </div>
-<div id="outline-container-orgcbae6ea" class="outline-3">
-<h3 id="orgcbae6ea"><span class="section-number-3">12.5.</span> Debug mode</h3>
+<div id="outline-container-org797b7a3" class="outline-3">
+<h3 id="org797b7a3"><span class="section-number-3">12.5.</span> Debug mode</h3>
 <div class="outline-text-3" id="text-12-5">
 <p>
 Inspect the exact request that would be sent without calling the API:
 </p>
 
-<pre class="example" id="org177a836">
+<pre class="example" id="org1f4545b">
 #+begin_src prompt :debug yes :results code
 What is 2 + 2?
 #+end_src
@@ -929,8 +929,8 @@ What is 2 + 2?
 </div>
 </div>
 </div>
-<div id="outline-container-orgcc509d3" class="outline-2">
-<h2 id="orgcc509d3"><span class="section-number-2">13.</span> File Assembly</h2>
+<div id="outline-container-org926d419" class="outline-2">
+<h2 id="org926d419"><span class="section-number-2">13.</span> File Assembly</h2>
 <div class="outline-text-2" id="text-13">
 <p>
 Every Emacs Lisp package needs a standard file header (library
@@ -940,55 +940,55 @@ define them here and let noweb compose the final <code>ob-prompt.el</code> in th
 correct order.
 </p>
 </div>
-<div id="outline-container-orga6a5153" class="outline-3">
-<h3 id="orga6a5153"><span class="section-number-3">13.1.</span> File header</h3>
+<div id="outline-container-org6e835be" class="outline-3">
+<h3 id="org6e835be"><span class="section-number-3">13.1.</span> File header</h3>
 <div class="outline-text-3" id="text-13-1">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org82df443"><span class="org-comment-delimiter">;;; </span><span class="org-comment">ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
+<pre class="src src-emacs-lisp" id="orga8cbf12"><span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Copyright (C) 2026 Pablo Munoz
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Copyright (C) 2026 Pablo Munoz
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Pablo Munoz <a href="mailto:contact%40slashpablo.com">&lt;contact@slashpablo.com&gt;</a>
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/pamuz/ob-prompt
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 0.1.0
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Package-Requires: ((emacs "28.1") (org "9.7"))
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: org, babel, ai, llm
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Author: Pablo Munoz <a href="mailto:contact%40slashpablo.com">&lt;contact@slashpablo.com&gt;</a>
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">URL: https://github.com/slashpablo/ob-prompt
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Version: 0.1.0
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Package-Requires: ((emacs "28.1") (org "9.7"))
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Keywords: org, babel, ai, llm
 </span>
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Commentary:
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">Commentary:
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Org Babel support for executing LLM prompts as src blocks.
-</span><span class="org-comment-delimiter">;;</span><span class="org-comment">
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Usage:
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">#+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">Explain monads in simple terms.
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">#+end_src
-</span><span class="org-comment-delimiter">;;</span><span class="org-comment">
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Press C-c C-c on the block to send the prompt to an LLM
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">and insert the response as a #+RESULTS: block.
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Org Babel support for executing LLM prompts as src blocks.
+</span><span style="color: #767676; font-style: italic;">;;</span><span style="color: #767676; font-style: italic;">
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Usage:
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">#+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">Explain monads in simple terms.
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">#+end_src
+</span><span style="color: #767676; font-style: italic;">;;</span><span style="color: #767676; font-style: italic;">
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Press C-c C-c on the block to send the prompt to an LLM
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">and insert the response as a #+RESULTS: block.
 </span>
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Code:
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">Code:
 </span>
-(<span class="org-keyword">require</span> '<span class="org-constant">ob</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">org-macs</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">json</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">url</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">ob</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">org-macs</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">json</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">url</span>)
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orged43499" class="outline-3">
-<h3 id="orged43499"><span class="section-number-3">13.2.</span> Provide</h3>
+<div id="outline-container-org032b230" class="outline-3">
+<h3 id="org032b230"><span class="section-number-3">13.2.</span> Provide</h3>
 <div class="outline-text-3" id="text-13-2">
 <div class="org-src-container">
-<pre class="src src-emacs-lisp" id="org2ba06a1">(<span class="org-keyword">provide</span> '<span class="org-constant">ob-prompt</span>)
+<pre class="src src-emacs-lisp" id="orga2ee38a">(<span style="color: #D83441;">provide</span> '<span style="color: #8041D8;">ob-prompt</span>)
 
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">ob-prompt.el ends here</span>
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">ob-prompt.el ends here</span>
 </pre>
 </div>
 </div>
 </div>
-<div id="outline-container-orge583f2b" class="outline-3">
-<h3 id="orge583f2b"><span class="section-number-3">13.3.</span> Tangled output</h3>
+<div id="outline-container-orgeed9a71" class="outline-3">
+<h3 id="orgeed9a71"><span class="section-number-3">13.3.</span> Tangled output</h3>
 <div class="outline-text-3" id="text-13-3">
 <p>
 This single block tangles into <code>ob-prompt.el</code>.  The noweb references
@@ -997,183 +997,183 @@ header, declarations, implementation, provide.
 </p>
 
 <div class="org-src-container">
-<pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
+<pre class="src src-emacs-lisp"><span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Copyright (C) 2026 Pablo Munoz
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Copyright (C) 2026 Pablo Munoz
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Author: Pablo Munoz <a href="mailto:contact%40slashpablo.com">&lt;contact@slashpablo.com&gt;</a>
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">URL: https://github.com/pamuz/ob-prompt
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Version: 0.1.0
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Package-Requires: ((emacs "28.1") (org "9.7"))
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Keywords: org, babel, ai, llm
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Author: Pablo Munoz <a href="mailto:contact%40slashpablo.com">&lt;contact@slashpablo.com&gt;</a>
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">URL: https://github.com/slashpablo/ob-prompt
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Version: 0.1.0
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Package-Requires: ((emacs "28.1") (org "9.7"))
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Keywords: org, babel, ai, llm
 </span>
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Commentary:
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">Commentary:
 </span>
-<span class="org-comment-delimiter">;; </span><span class="org-comment">Org Babel support for executing LLM prompts as src blocks.
-</span><span class="org-comment-delimiter">;;</span><span class="org-comment">
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Usage:
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">#+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">Explain monads in simple terms.
-</span><span class="org-comment-delimiter">;;   </span><span class="org-comment">#+end_src
-</span><span class="org-comment-delimiter">;;</span><span class="org-comment">
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">Press C-c C-c on the block to send the prompt to an LLM
-</span><span class="org-comment-delimiter">;; </span><span class="org-comment">and insert the response as a #+RESULTS: block.
+<span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Org Babel support for executing LLM prompts as src blocks.
+</span><span style="color: #767676; font-style: italic;">;;</span><span style="color: #767676; font-style: italic;">
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Usage:
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">#+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">Explain monads in simple terms.
+</span><span style="color: #767676; font-style: italic;">;;   </span><span style="color: #767676; font-style: italic;">#+end_src
+</span><span style="color: #767676; font-style: italic;">;;</span><span style="color: #767676; font-style: italic;">
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Press C-c C-c on the block to send the prompt to an LLM
+</span><span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">and insert the response as a #+RESULTS: block.
 </span>
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">Code:
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">Code:
 </span>
-(<span class="org-keyword">require</span> '<span class="org-constant">ob</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">org-macs</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">json</span>)
-(<span class="org-keyword">require</span> '<span class="org-constant">url</span>)
-(<span class="org-keyword">defconst</span> <span class="org-variable-name">org-babel-header-args:prompt</span>
-  '((model    . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">LLM model identifier
-</span>    (system   . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">system prompt string
-</span>    (endpoint . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">API endpoint URL
-</span>    (api-key  . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">API key (string or evaluated form)
-</span>    (preamble . <span class="org-builtin">:any</span>)   <span class="org-comment-delimiter">;; </span><span class="org-comment">include buffer content above block as context
-</span>    (debug    . <span class="org-builtin">:any</span>))  <span class="org-comment-delimiter">;; </span><span class="org-comment">return raw request/response instead of content
-</span>  <span class="org-doc">"Prompt-specific header arguments for ob-prompt."</span>)
-(<span class="org-keyword">defvar</span> <span class="org-variable-name">org-babel-default-header-args:prompt</span>
-  '((<span class="org-builtin">:results</span> . <span class="org-string">"raw"</span>)
-    (<span class="org-builtin">:exports</span> . <span class="org-string">"both"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Make sures both prompt and result are exported
-</span>    (<span class="org-builtin">:eval</span> . <span class="org-string">"no-export"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Do not re-evaluate prompt blocks on export
-</span>    (<span class="org-builtin">:wrap</span> . <span class="org-string">"assistant"</span>) <span class="org-comment-delimiter">;; </span><span class="org-comment">Provide concrete boundries to responses
-</span>    (<span class="org-builtin">:noweb</span> . <span class="org-string">"yes"</span>)) <span class="org-comment-delimiter">;; </span><span class="org-comment">Enable &lt;&lt;block-name&gt;&gt; inclusion by default
-</span>  <span class="org-doc">"Default header arguments for prompt src blocks."</span>)
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--build-messages</span> (body <span class="org-type">&amp;optional</span> system preamble-text)
-  <span class="org-doc">"Build the messages vector for the API request.
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">ob</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">org-macs</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">json</span>)
+(<span style="color: #D83441;">require</span> '<span style="color: #8041D8;">url</span>)
+(<span style="color: #D83441;">defconst</span> <span style="color: #86e7d7;">org-babel-header-args:prompt</span>
+  '((model    . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">LLM model identifier
+</span>    (system   . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">system prompt string
+</span>    (endpoint . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">API endpoint URL
+</span>    (api-key  . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">API key (string or evaluated form)
+</span>    (preamble . <span style="color: #3679D8;">:any</span>)   <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">include buffer content above block as context
+</span>    (debug    . <span style="color: #3679D8;">:any</span>))  <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">return raw request/response instead of content
+</span>  <span style="color: #9ae168; font-style: italic;">"Prompt-specific header arguments for ob-prompt."</span>)
+(<span style="color: #D83441;">defvar</span> <span style="color: #86e7d7;">org-babel-default-header-args:prompt</span>
+  '((<span style="color: #3679D8;">:results</span> . <span style="color: #79D836;">"raw"</span>)
+    (<span style="color: #3679D8;">:exports</span> . <span style="color: #79D836;">"both"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Make sures both prompt and result are exported
+</span>    (<span style="color: #3679D8;">:eval</span> . <span style="color: #79D836;">"no-export"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Do not re-evaluate prompt blocks on export
+</span>    (<span style="color: #3679D8;">:wrap</span> . <span style="color: #79D836;">"assistant"</span>) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Provide concrete boundries to responses
+</span>    (<span style="color: #3679D8;">:noweb</span> . <span style="color: #79D836;">"yes"</span>)) <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Enable &lt;&lt;block-name&gt;&gt; inclusion by default
+</span>  <span style="color: #9ae168; font-style: italic;">"Default header arguments for prompt src blocks."</span>)
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--build-messages</span> (body <span style="color: #3679D8;">&amp;optional</span> system preamble-text)
+  <span style="color: #9ae168; font-style: italic;">"Build the messages vector for the API request.
 BODY is the user's prompt text.
 SYSTEM, when non-nil, becomes a system message.
 PREAMBLE-TEXT, when non-nil, is wrapped in &lt;context&gt; tags
 and prepended to the user message."</span>
-  (<span class="org-keyword">let</span> ((user-content (<span class="org-keyword">if</span> preamble-text
-                          (format <span class="org-string">"&lt;context&gt;\n%s\n&lt;/context&gt;\n\n%s"</span>
+  (<span style="color: #D83441;">let</span> ((user-content (<span style="color: #D83441;">if</span> preamble-text
+                          (format <span style="color: #79D836;">"&lt;context&gt;\n%s\n&lt;/context&gt;\n\n%s"</span>
                                   preamble-text body)
                         body))
         (messages '()))
-    (<span class="org-keyword">when</span> system
-      (<span class="org-keyword">push</span> `((role . <span class="org-string">"system"</span>) (content . ,system)) messages))
-    (<span class="org-keyword">push</span> `((role . <span class="org-string">"user"</span>) (content . ,user-content)) messages)
+    (<span style="color: #D83441;">when</span> system
+      (<span style="color: #D83441;">push</span> `((role . <span style="color: #79D836;">"system"</span>) (content . ,system)) messages))
+    (<span style="color: #D83441;">push</span> `((role . <span style="color: #79D836;">"user"</span>) (content . ,user-content)) messages)
     (vconcat (nreverse messages))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--build-payload</span> (model messages)
-  <span class="org-doc">"Build the JSON-ready alist for the API request.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--build-payload</span> (model messages)
+  <span style="color: #9ae168; font-style: italic;">"Build the JSON-ready alist for the API request.
 MODEL is the model identifier string.
-MESSAGES is the vector returned by `</span><span class="org-doc"><span class="org-constant">ob-prompt--build-messages</span></span><span class="org-doc">'."</span>
-  `((<span class="org-string">"model"</span> . ,model)
-    (<span class="org-string">"max_completion_tokens"</span> . 16384)
-    (<span class="org-string">"messages"</span> . ,messages)))
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--parse-response</span> (json-string)
-  <span class="org-doc">"Extract the assistant's message content from JSON-STRING.
-Signals `</span><span class="org-doc"><span class="org-constant">user-error</span></span><span class="org-doc">' if the response indicates an API error
+MESSAGES is the vector returned by `</span><span style="color: #8041D8; font-style: italic;">ob-prompt--build-messages</span><span style="color: #9ae168; font-style: italic;">'."</span>
+  `((<span style="color: #79D836;">"model"</span> . ,model)
+    (<span style="color: #79D836;">"max_completion_tokens"</span> . 16384)
+    (<span style="color: #79D836;">"messages"</span> . ,messages)))
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--parse-response</span> (json-string)
+  <span style="color: #9ae168; font-style: italic;">"Extract the assistant's message content from JSON-STRING.
+Signals `</span><span style="color: #8041D8; font-style: italic;">user-error</span><span style="color: #9ae168; font-style: italic;">' if the response indicates an API error
 or has an unexpected structure."</span>
-  (<span class="org-keyword">let*</span> ((data (<span class="org-keyword">condition-case</span> err
+  (<span style="color: #D83441;">let*</span> ((data (<span style="color: #D83441;">condition-case</span> err
                    (json-read-from-string json-string)
                  (json-error
-                  (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: failed to parse response JSON: %s"</span>
+                  (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: failed to parse response JSON: %s"</span>
                               (error-message-string err)))))
          (err-msg (alist-get 'message (alist-get 'error data))))
-    (<span class="org-keyword">when</span> err-msg
-      (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: API error: %s"</span> err-msg))
-    (<span class="org-keyword">condition-case</span> nil
+    (<span style="color: #D83441;">when</span> err-msg
+      (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: API error: %s"</span> err-msg))
+    (<span style="color: #D83441;">condition-case</span> nil
         (alist-get 'content
                    (alist-get 'message
                               (aref (alist-get 'choices data) 0)))
-      (<span class="org-warning">error</span>
-       (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: unexpected response structure: %s"</span>
+      (<span style="color: #D85F00;">error</span>
+       (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: unexpected response structure: %s"</span>
                    (truncate-string-to-width json-string 200))))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--json-encode-ascii</span> (object)
-  <span class="org-doc">"Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
-This avoids `</span><span class="org-doc"><span class="org-constant">url-http-create-request</span></span><span class="org-doc">' failing with
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--json-encode-ascii</span> (object)
+  <span style="color: #9ae168; font-style: italic;">"Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
+This avoids `</span><span style="color: #8041D8; font-style: italic;">url-http-create-request</span><span style="color: #9ae168; font-style: italic;">' failing with
 \"Multibyte text in HTTP request\" (Emacs Bug#23750)."</span>
-  (<span class="org-keyword">let</span> ((json (json-encode object)))
+  (<span style="color: #D83441;">let</span> ((json (json-encode object)))
     (replace-regexp-in-string
-     <span class="org-string">"[</span><span class="org-string"><span class="org-negation-char">^</span></span><span class="org-string">\x00-\x7f]"</span>
-     (<span class="org-keyword">lambda</span> (char)
-       (format <span class="org-string">"\\u%04x"</span> (string-to-char char)))
+     <span style="color: #79D836;">"[</span><span style="color: #3679D8; font-weight: bold;">^</span><span style="color: #79D836;">\x00-\x7f]"</span>
+     (<span style="color: #D83441;">lambda</span> (char)
+       (format <span style="color: #79D836;">"\\u%04x"</span> (string-to-char char)))
      json nil t)))
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--request</span> (endpoint api-key payload)
-  <span class="org-doc">"Send PAYLOAD to ENDPOINT using API-KEY via built-in `</span><span class="org-doc"><span class="org-constant">url</span></span><span class="org-doc">'.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--request</span> (endpoint api-key payload)
+  <span style="color: #9ae168; font-style: italic;">"Send PAYLOAD to ENDPOINT using API-KEY via built-in `</span><span style="color: #8041D8; font-style: italic;">url</span><span style="color: #9ae168; font-style: italic;">'.
 Returns the response body as a string.
-Signals `</span><span class="org-doc"><span class="org-constant">user-error</span></span><span class="org-doc">' on HTTP or transport errors."</span>
-  (<span class="org-keyword">let*</span> ((url-request-method <span class="org-string">"POST"</span>)
+Signals `</span><span style="color: #8041D8; font-style: italic;">user-error</span><span style="color: #9ae168; font-style: italic;">' on HTTP or transport errors."</span>
+  (<span style="color: #D83441;">let*</span> ((url-request-method <span style="color: #79D836;">"POST"</span>)
          (url-request-extra-headers
-          `((<span class="org-string">"Content-Type"</span> . <span class="org-string">"application/json"</span>)
-            (<span class="org-string">"Authorization"</span> . ,(concat <span class="org-string">"Bearer "</span> api-key))))
+          `((<span style="color: #79D836;">"Content-Type"</span> . <span style="color: #79D836;">"application/json"</span>)
+            (<span style="color: #79D836;">"Authorization"</span> . ,(concat <span style="color: #79D836;">"Bearer "</span> api-key))))
          (url-request-data (ob-prompt--json-encode-ascii payload))
          (buffer (url-retrieve-synchronously endpoint t t 300)))
-    (<span class="org-keyword">unless</span> buffer
-      (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: request failed (no response buffer)"</span>))
-    (<span class="org-keyword">with-current-buffer</span> buffer
-      (<span class="org-keyword">unwind-protect</span>
-       (<span class="org-keyword">progn</span>
+    (<span style="color: #D83441;">unless</span> buffer
+      (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: request failed (no response buffer)"</span>))
+    (<span style="color: #D83441;">with-current-buffer</span> buffer
+      (<span style="color: #D83441;">unwind-protect</span>
+       (<span style="color: #D83441;">progn</span>
          (goto-char (point-min))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Check HTTP status
-</span>         (<span class="org-keyword">unless</span> (looking-at <span class="org-string">"HTTP/.* 200"</span>)
-           (re-search-forward <span class="org-string">"^HTTP/.* </span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">(</span></span><span class="org-string">[0-9]+</span><span class="org-string"><span class="org-regexp-grouping-backslash">\\</span></span><span class="org-string"><span class="org-regexp-grouping-construct">)</span></span><span class="org-string">"</span> nil t)
-           (<span class="org-warning">user-error</span> <span class="org-string">"ob-prompt: HTTP error %s"</span>
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Check HTTP status
+</span>         (<span style="color: #D83441;">unless</span> (looking-at <span style="color: #79D836;">"HTTP/.* 200"</span>)
+           (re-search-forward <span style="color: #79D836;">"^HTTP/.* </span><span style="color: #3679D8; font-weight: bold;">\\</span><span style="color: #3679D8; font-weight: bold;">(</span><span style="color: #79D836;">[0-9]+</span><span style="color: #3679D8; font-weight: bold;">\\</span><span style="color: #3679D8; font-weight: bold;">)</span><span style="color: #79D836;">"</span> nil t)
+           (<span style="color: #D85F00;">user-error</span> <span style="color: #79D836;">"ob-prompt: HTTP error %s"</span>
                        (match-string 1)))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Skip headers
-</span>         (re-search-forward <span class="org-string">"\r?\n\r?\n"</span> nil 'move)
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Skip headers
+</span>         (re-search-forward <span style="color: #79D836;">"\r?\n\r?\n"</span> nil 'move)
          (decode-coding-string
           (buffer-substring-no-properties (point) (point-max))
           'utf-8))
        (kill-buffer buffer)))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-execute:prompt</span> (body params)
-  <span class="org-doc">"Execute a prompt BODY with PARAMS via Org Babel.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-execute:prompt</span> (body params)
+  <span style="color: #9ae168; font-style: italic;">"Execute a prompt BODY with PARAMS via Org Babel.
 Sends the prompt to the configured LLM endpoint and returns
 the response text."</span>
-  (<span class="org-keyword">let*</span> ((model    (cdr (assq <span class="org-builtin">:model</span> params)))
-         (endpoint (cdr (assq <span class="org-builtin">:endpoint</span> params)))
-         (api-key  (cdr (assq <span class="org-builtin">:api-key</span> params)))
-         (system   (cdr (assq <span class="org-builtin">:system</span> params)))
-         (preamble (cdr (assq <span class="org-builtin">:preamble</span> params)))
-         (debug    (cdr (assq <span class="org-builtin">:debug</span> params)))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Gather buffer text above this src block when :preamble is set
+  (<span style="color: #D83441;">let*</span> ((model    (cdr (assq <span style="color: #3679D8;">:model</span> params)))
+         (endpoint (cdr (assq <span style="color: #3679D8;">:endpoint</span> params)))
+         (api-key  (cdr (assq <span style="color: #3679D8;">:api-key</span> params)))
+         (system   (cdr (assq <span style="color: #3679D8;">:system</span> params)))
+         (preamble (cdr (assq <span style="color: #3679D8;">:preamble</span> params)))
+         (debug    (cdr (assq <span style="color: #3679D8;">:debug</span> params)))
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Gather buffer text above this src block when :preamble is set
 </span>         (preamble-text
-          (<span class="org-keyword">when</span> (equal preamble <span class="org-string">"yes"</span>)
-            (<span class="org-keyword">let</span> ((src-block (org-element-at-point)))
+          (<span style="color: #D83441;">when</span> (equal preamble <span style="color: #79D836;">"yes"</span>)
+            (<span style="color: #D83441;">let</span> ((src-block (org-element-at-point)))
               (buffer-substring-no-properties
                (point-min)
-               (org-element-property <span class="org-builtin">:begin</span> src-block)))))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Expand :var references in the body
+               (org-element-property <span style="color: #3679D8;">:begin</span> src-block)))))
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Expand :var references in the body
 </span>         (expanded-body (org-babel-expand-body:prompt body params))
-         <span class="org-comment-delimiter">;; </span><span class="org-comment">Assemble the request
+         <span style="color: #767676; font-style: italic;">;; </span><span style="color: #767676; font-style: italic;">Assemble the request
 </span>         (messages (ob-prompt--build-messages
                     expanded-body system preamble-text))
          (payload  (ob-prompt--build-payload model messages)))
-    (<span class="org-keyword">if</span> (equal debug <span class="org-string">"yes"</span>)
+    (<span style="color: #D83441;">if</span> (equal debug <span style="color: #79D836;">"yes"</span>)
         (ob-prompt--format-debug endpoint api-key payload)
       (ob-prompt--parse-response
        (ob-prompt--request endpoint api-key payload)))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">ob-prompt--format-debug</span> (endpoint api-key payload)
-  <span class="org-doc">"Format a debug representation of the request.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">ob-prompt--format-debug</span> (endpoint api-key payload)
+  <span style="color: #9ae168; font-style: italic;">"Format a debug representation of the request.
 Redacts API-KEY to show only the first and last 4 characters."</span>
-  (<span class="org-keyword">let</span> ((redacted (<span class="org-keyword">if</span> (<span class="org-keyword">and</span> api-key (&gt; (length api-key) 8))
+  (<span style="color: #D83441;">let</span> ((redacted (<span style="color: #D83441;">if</span> (<span style="color: #D83441;">and</span> api-key (&gt; (length api-key) 8))
                       (concat (substring api-key 0 4)
-                              <span class="org-string">"..."</span>
+                              <span style="color: #79D836;">"..."</span>
                               (substring api-key -4))
-                    <span class="org-string">"****"</span>)))
-    (format <span class="org-string">"endpoint: %s\napi-key:  %s\npayload:\n%s"</span>
+                    <span style="color: #79D836;">"****"</span>)))
+    (format <span style="color: #79D836;">"endpoint: %s\napi-key:  %s\npayload:\n%s"</span>
             endpoint redacted
             (json-encode payload))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-expand-body:prompt</span> (body params)
-  <span class="org-doc">"Expand BODY for a prompt block by substituting :var references.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-expand-body:prompt</span> (body params)
+  <span style="color: #9ae168; font-style: italic;">"Expand BODY for a prompt block by substituting :var references.
 Each :var binding replaces $name in BODY with the variable's value."</span>
-  (<span class="org-keyword">let</span> ((expanded body))
-    (<span class="org-keyword">dolist</span> (pair (org-babel--get-vars params) expanded)
-      (<span class="org-keyword">setq</span> expanded
+  (<span style="color: #D83441;">let</span> ((expanded body))
+    (<span style="color: #D83441;">dolist</span> (pair (org-babel--get-vars params) expanded)
+      (<span style="color: #D83441;">setq</span> expanded
             (replace-regexp-in-string
-             (regexp-quote (format <span class="org-string">"$%s"</span> (car pair)))
-             (<span class="org-keyword">save-match-data</span> (format <span class="org-string">"%s"</span> (cdr pair)))
+             (regexp-quote (format <span style="color: #79D836;">"$%s"</span> (car pair)))
+             (<span style="color: #D83441;">save-match-data</span> (format <span style="color: #79D836;">"%s"</span> (cdr pair)))
              expanded
              t t)))))
-(<span class="org-keyword">defun</span> <span class="org-function-name">org-babel-prep-session:prompt</span> (_session _params)
-  <span class="org-doc">"Prepare a prompt session.
+(<span style="color: #D83441;">defun</span> <span style="color: #D8B941;">org-babel-prep-session:prompt</span> (_session _params)
+  <span style="color: #9ae168; font-style: italic;">"Prepare a prompt session.
 Prompt sessions are not yet supported."</span>
-  (<span class="org-warning">error</span> <span class="org-string">"ob-prompt: sessions are not yet implemented"</span>))
-(<span class="org-keyword">provide</span> '<span class="org-constant">ob-prompt</span>)
+  (<span style="color: #D85F00;">error</span> <span style="color: #79D836;">"ob-prompt: sessions are not yet implemented"</span>))
+(<span style="color: #D83441;">provide</span> '<span style="color: #8041D8;">ob-prompt</span>)
 
-<span class="org-comment-delimiter">;;; </span><span class="org-comment">ob-prompt.el ends here</span>
+<span style="color: #767676; font-style: italic;">;;; </span><span style="color: #767676; font-style: italic;">ob-prompt.el ends here</span>
 </pre>
 </div>
 </div>
@@ -1182,7 +1182,7 @@ Prompt sessions are not yet supported."</span>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: <a href="https://slashpablo.com"><span class="slash"></span>pablo</a></p>
-<p class="date">Created: 2026-02-16 Mon 11:52</p>
+<p class="date">Created: 2026-02-16 Mon 12:21</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
