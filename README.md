@@ -8,7 +8,7 @@ Explain monads in simple terms.
 #+end_src
 ```
 
-> **[Read the full documentation](https://pamuz.github.io/ob-prompt/htmldocs/)**
+> **[Read the full documentation](https://slashpablo.github.io/ob-prompt/)**
 
 ## Features
 
@@ -74,5 +74,5 @@ emacs -batch -L . -l ob-prompt-test.el -f ert-run-tests-batch-and-exit
 Pablo Munoz
 
 - https://x.com/digitalbandido
-- https://github.com/pamuz
+- https://github.com/slashpablo
 - contact@slashpablo.com

@@ -3,7 +3,7 @@
 ;; Copyright (C) 2026 Pablo Munoz
 
 ;; Author: Pablo Munoz <contact@slashpablo.com>
-;; URL: https://github.com/pamuz/ob-prompt
+;; URL: https://github.com/slashpablo/ob-prompt
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1") (org "9.7"))
 ;; Keywords: org, babel, ai, llm
