@@ -1,0 +1,758 @@
+#+TITLE: ob-prompt.el — Org Babel for LLM Prompts
+#+AUTHOR: @@html:<a href="https://slashpablo.com"><span class="slash"></span>pablo</a>@@
+#+PROPERTY: header-args:emacs-lisp :tangle no :lexical t
+#+PROPERTY: header-args:prompt :model gpt-5.2-chat :endpoint "https://pablo-ml1b1csr-eastus2.cognitiveservices.azure.com/openai/deployments/gpt-5.2-chat/chat/completions?api-version=2024-05-01-preview" :api-key (auth-source-pick-first-password :host "ai.azure.com") :preamble yes :results drawer :system "You are an expert in literate programming helping me co-author an emacs org mode file. Format your outputs in org mode format (no markdown) unless expclitly told otherwise. Keep your responses concise and to the point." :wrap assistant
+#+EXPORT_FILE_NAME: ./htmldocs/index
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/html-theme-readtheorg.setup
+#+HTML_HEAD: <link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/search.css"/>
+#+HTML_HEAD_EXTRA: <link rel="stylesheet" type="text/css" href="ob-prompt.css"/>
+#+HTML_HEAD_EXTRA: <style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+#+HTML_HEAD_EXTRA: <a href="https://github.com/pamuz/ob-prompt" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: fixed; top: 0; border: 0; right: 0; z-index: 1000;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+#+HTML_HEAD_EXTRA: <style>.support-fab,.support-fab:visited,.support-fab:link{position:fixed;bottom:28px;right:28px;z-index:1000;background:rgba(0,0,0,.45);color:#fff;text-decoration:none;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;font-size:13px;font-weight:500;padding:8px 14px;border-radius:50px;box-shadow:0 1px 4px rgba(0,0,0,.15);opacity:.6;transition:opacity .2s,box-shadow .2s}.support-fab:hover{opacity:1;box-shadow:0 2px 8px rgba(0,0,0,.25);color:#fff}@media(max-width:500px){.support-fab,.support-fab:visited,.support-fab:link{bottom:16px;right:16px;padding:6px 12px;font-size:12px}}</style>
+#+HTML_HEAD_EXTRA: <a href="https://www.patreon.com/c/slashpablo" class="support-fab" aria-label="Support this project">&#9829; Support</a>
+
+
+
+* Introduction
+
+=ob-prompt= turns Org Babel into a lightweight, reproducible interface
+for large language models.  A prompt is just a src block:
+
+#+begin_example
+,#+begin_src prompt :model claude-sonnet-4-5-20250929
+Explain monads in simple terms.
+,#+end_src
+#+end_example
+
+Press =C-c C-c= and the response appears as a =#+RESULTS:= block.
+Variables, system prompts, and the =:preamble= mechanism (which feeds
+the buffer content above the block as context) all compose naturally
+with the rest of Org.
+
+* Quick Start
+
+Get the code from [[https://github.com/pamuz/ob-prompt][GitHub]] and add one of the following to your Emacs configuration:
+
+#+begin_src emacs-lisp :tangle no
+;; Option A: via org-babel-load-languages (requires ob-prompt.el on load-path)
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (prompt . t)))
+
+;; Option B: just load the file directly
+(require 'ob-prompt)
+#+end_src
+
+Then write a prompt block and press =C-c C-c=:
+
+#+begin_example
+,#+begin_src prompt :model claude-sonnet-4-5-20250929
+Explain monads in simple terms.
+,#+end_src
+#+end_example
+
+The implementation is split into small helpers.  Each section
+introduces a concept, shows the code, then demonstrates it with a
+live example you can =C-c C-c= to see the actual output.  The full
+automated test suite lives separately in =ob-prompt-test.el=.
+
+* Header Arguments
+
+** Custom Header Arguments
+
+These are the prompt-specific header arguments.  Babel merges them
+with the standard set (=:results=, =:exports=, =:var=, =:session=,
+etc.).  Declaring them here enables completion in the block header.
+
+Any =:keyword value= pair flows through to =params= regardless of
+whether it is declared - but listing them explicitly is good hygiene.
+
+#+name: header-args-custom
+#+begin_src emacs-lisp
+(defconst org-babel-header-args:prompt
+  '((model    . :any)   ;; LLM model identifier
+    (system   . :any)   ;; system prompt string
+    (endpoint . :any)   ;; API endpoint URL
+    (api-key  . :any)   ;; API key (string or evaluated form)
+    (preamble . :any)   ;; include buffer content above block as context
+    (debug    . :any))  ;; return raw request/response instead of content
+  "Prompt-specific header arguments for ob-prompt.")
+#+end_src
+
+** Default Header Arguments
+
+When no header arguments are provided, the following defaults
+apply. They are chosen to integrate smoothly with an in-document
+prompting workflow and minimize boilerplate while remaining explicit
+and reproducible.
+
+#+name: header-args-default
+#+begin_src emacs-lisp
+  (defvar org-babel-default-header-args:prompt
+    '((:results . "raw")
+      (:exports . "both") ;; Make sures both prompt and result are exported
+      (:eval . "no-export") ;; Do not re-evaluate prompt blocks on export
+      (:wrap . "assistant") ;; Provide concrete boundries to responses
+      (:noweb . "yes")) ;; Enable <<block-name>> inclusion by default
+    "Default header arguments for prompt src blocks.")
+#+end_src
+
+* Building Messages
+
+The =messages= array is the core data structure sent to any
+OpenAI-compatible API.  This helper assembles it from the prompt body
+and optional system/preamble context, returning a vector of alists
+ready for =json-encode=.
+
+#+name: build-messages
+#+begin_src emacs-lisp
+(defun ob-prompt--build-messages (body &optional system preamble-text)
+  "Build the messages vector for the API request.
+BODY is the user's prompt text.
+SYSTEM, when non-nil, becomes a system message.
+PREAMBLE-TEXT, when non-nil, is wrapped in <context> tags
+and prepended to the user message."
+  (let ((user-content (if preamble-text
+                          (format "<context>\n%s\n</context>\n\n%s"
+                                  preamble-text body)
+                        body))
+        (messages '()))
+    (when system
+      (push `((role . "system") (content . ,system)) messages))
+    (push `((role . "user") (content . ,user-content)) messages)
+    (vconcat (nreverse messages))))
+#+end_src
+
+#+begin_src prompt
+Why the need to vconcat nreverse messages.
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+In short: to return the messages in the correct order as a vector.
+
+More precisely:
+
+- Messages are accumulated with push, which prepends to the list for efficiency.
+- That means the logical order (system → user) is reversed in the list.
+- nreverse restores the intended chronological order.
+- vconcat converts the list into a vector, which matches the
+  OpenAI-compatible API expectation for the messages field and works
+  cleanly with json-encode.
+
+So the sequence is:
+build efficiently as a list → fix order → produce the required vector type.
+#+end_assistant
+
+#+begin_src prompt :wrap assistant
+So, because in emacs-lisp everything is pretty much a list. Objects
+are encoded a lists, so arrays need to be encoded as vectors to
+disambiguate. Correct?
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+Yes — that’s exactly right.
+
+In Emacs Lisp:
+
+- Both JSON objects and JSON arrays are naturally represented as Lisp lists.
+- json-encode disambiguates by type:
+  - alists (lists of cons cells) → JSON objects
+  - vectors → JSON arrays
+- Therefore, any field that must be a JSON array (like messages) must be a vector.
+
+So the pipeline is:
+
+list (easy to build) → nreverse (correct order) → vconcat (force JSON array)
+
+Without vconcat, messages would be encoded as a JSON object or
+malformed structure rather than the required array.
+#+end_assistant
+
+** Example
+
+All three options together — system prompt, preamble context, and
+body.  =C-c C-c= to see the exact message array that would be sent:
+
+#+begin_src emacs-lisp :tangle no :results pp :exports both :wrap example
+(ob-prompt--build-messages
+ "What patterns do you see?"
+ "You are a code reviewer."
+ "* Header\nSome earlier buffer content...")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+[((role . "system") (content . "You are a code reviewer."))
+ ((role . "user")
+  (content
+   . "<context>\n* Header\nSome earlier buffer content...\n</context>\n\nWhat patterns do you see?"))]
+#+end_example
+
+* Building the Request Payload
+
+The payload is the top-level JSON object sent to the API.  Keeping
+this as a separate helper means we can test the exact structure
+without touching the network.
+
+#+name: build-payload
+#+begin_src emacs-lisp
+(defun ob-prompt--build-payload (model messages)
+  "Build the JSON-ready alist for the API request.
+MODEL is the model identifier string.
+MESSAGES is the vector returned by `ob-prompt--build-messages'."
+  `(("model" . ,model)
+    ("max_completion_tokens" . 16384)
+    ("messages" . ,messages)))
+#+end_src
+
+** Example
+
+The full payload, ready to be passed to =json-encode=:
+
+#+begin_src emacs-lisp :tangle no :results pp :exports both :wrap example
+(ob-prompt--build-payload
+ "gpt-4"
+ (ob-prompt--build-messages "Explain monads."))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+(("model" . "gpt-4") ("max_completion_tokens" . 16384)
+ ("messages" . [((role . "user") (content . "Explain monads."))]))
+#+end_example
+
+* Parsing the Response
+
+The API returns a JSON object with a =choices= array.  This helper
+extracts the assistant's text content, signaling a clear error if the
+response is malformed or contains an API error.
+
+#+name: parse-response
+#+begin_src emacs-lisp
+(defun ob-prompt--parse-response (json-string)
+  "Extract the assistant's message content from JSON-STRING.
+Signals `user-error' if the response indicates an API error
+or has an unexpected structure."
+  (let* ((data (condition-case err
+                   (json-read-from-string json-string)
+                 (json-error
+                  (user-error "ob-prompt: failed to parse response JSON: %s"
+                              (error-message-string err)))))
+         (err-msg (alist-get 'message (alist-get 'error data))))
+    (when err-msg
+      (user-error "ob-prompt: API error: %s" err-msg))
+    (condition-case nil
+        (alist-get 'content
+                   (alist-get 'message
+                              (aref (alist-get 'choices data) 0)))
+      (error
+       (user-error "ob-prompt: unexpected response structure: %s"
+                   (truncate-string-to-width json-string 200))))))
+#+end_src
+
+#+begin_src prompt
+Does the actual response ever come in an element of the choices array
+other than 0? I've never seen it.
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+In practice, almost never — and for your use case, you can safely
+assume index 0.
+
+More detail:
+
+- The OpenAI-compatible APIs define `choices` as an array to support:
+  - `n > 1` completions (legacy / sampling use cases)
+  - parallel or speculative decoding (internal)
+- When `n` is omitted (default = 1), the server returns exactly one element.
+- That element is always at index 0.
+- I’m not aware of any production API that returns the “primary”
+  response anywhere else.
+
+So:
+
+- Yes, additional elements can exist in theory.
+- No, you should not expect the actual response to appear at a
+  non-zero index unless you explicitly requested multiple completions.
+
+Your current parser is therefore correct and idiomatic.
+
+If you wanted to be maximally defensive, the only reasonable extension
+would be:
+- assert `(> (length choices) 0)`
+- optionally concatenate contents when `n > 1`
+
+But for ob-prompt’s design goals (single prompt → single response),
+indexing `[0]` is exactly right.
+#+end_assistant
+
+** Example
+
+Parsing a realistic API response — you can see exactly what gets
+extracted:
+
+#+begin_src emacs-lisp :tangle no :results value :wrap example :exports both
+(ob-prompt--parse-response
+ "{\"id\":\"chatcmpl-abc\",\"choices\":[{\"index\":0,\"message\":{\"role\":\"assistant\",\"content\":\"A monad is a design pattern.\"}}]}")
+#+end_src
+
+#+RESULTS:
+#+begin_example
+A monad is a design pattern.
+#+end_example
+
+* Sending the Request
+
+** ASCII-safe JSON Encoding
+
+=url-http-create-request= rejects any request whose =string-bytes=
+exceeds its =length= — i.e. any non-ASCII byte in the assembled
+request string.  Since =json-encode= can produce literal non-ASCII
+characters (em-dashes, curly quotes, etc. from preamble context), we
+escape them to =\uNNNN= JSON sequences first.  Every conforming JSON
+parser decodes these transparently.
+
+#+name: json-encode-ascii
+#+begin_src emacs-lisp
+(defun ob-prompt--json-encode-ascii (object)
+  "Encode OBJECT as JSON with all non-ASCII characters escaped to \\uNNNN.
+This avoids `url-http-create-request' failing with
+\"Multibyte text in HTTP request\" (Emacs Bug#23750)."
+  (let ((json (json-encode object)))
+    (replace-regexp-in-string
+     "[^\x00-\x7f]"
+     (lambda (char)
+       (format "\\u%04x" (string-to-char char)))
+     json nil t)))
+#+end_src
+
+** HTTP Transport
+
+#+name: http-transport
+#+begin_src emacs-lisp
+  (defun ob-prompt--request (endpoint api-key payload)
+    "Send PAYLOAD to ENDPOINT using API-KEY via built-in `url'.
+  Returns the response body as a string.
+  Signals `user-error' on HTTP or transport errors."
+    (let* ((url-request-method "POST")
+  	 (url-request-extra-headers
+  	  `(("Content-Type" . "application/json")
+  	    ("Authorization" . ,(concat "Bearer " api-key))))
+  	 (url-request-data (ob-prompt--json-encode-ascii payload))
+  	 (buffer (url-retrieve-synchronously endpoint t t 300)))
+      (unless buffer
+        (user-error "ob-prompt: request failed (no response buffer)"))
+      (with-current-buffer buffer
+        (unwind-protect
+         (progn
+  	 (goto-char (point-min))
+  	 ;; Check HTTP status
+  	 (unless (looking-at "HTTP/.* 200")
+  	   (re-search-forward "^HTTP/.* \\([0-9]+\\)" nil t)
+  	   (user-error "ob-prompt: HTTP error %s"
+  		       (match-string 1)))
+  	 ;; Skip headers
+  	 (re-search-forward "\r?\n\r?\n" nil 'move)
+  	 (decode-coding-string
+	  (buffer-substring-no-properties (point) (point-max))
+	  'utf-8))
+         (kill-buffer buffer)))))
+#+end_src
+
+* The Core Execution Function
+
+This is what Babel calls when you press =C-c C-c= on a =prompt=
+block.  It is a thin orchestrator — all logic lives in the helpers
+above.
+
+#+name: execute
+#+begin_src emacs-lisp
+(defun org-babel-execute:prompt (body params)
+  "Execute a prompt BODY with PARAMS via Org Babel.
+Sends the prompt to the configured LLM endpoint and returns
+the response text."
+  (let* ((model    (cdr (assq :model params)))
+         (endpoint (cdr (assq :endpoint params)))
+         (api-key  (cdr (assq :api-key params)))
+         (system   (cdr (assq :system params)))
+         (preamble (cdr (assq :preamble params)))
+         (debug    (cdr (assq :debug params)))
+         ;; Gather buffer text above this src block when :preamble is set
+         (preamble-text
+          (when (equal preamble "yes")
+            (let ((src-block (org-element-at-point)))
+              (buffer-substring-no-properties
+               (point-min)
+               (org-element-property :begin src-block)))))
+         ;; Expand :var references in the body
+         (expanded-body (org-babel-expand-body:prompt body params))
+         ;; Assemble the request
+         (messages (ob-prompt--build-messages
+                    expanded-body system preamble-text))
+         (payload  (ob-prompt--build-payload model messages)))
+    (if (equal debug "yes")
+        (ob-prompt--format-debug endpoint api-key payload)
+      (ob-prompt--parse-response
+       (ob-prompt--request endpoint api-key payload)))))
+#+end_src
+
+** Debug Formatting
+
+When =:debug yes= is set, instead of calling the API we return a
+human-readable dump of what /would/ be sent.  The API key is redacted.
+
+#+name: format-debug
+#+begin_src emacs-lisp
+(defun ob-prompt--format-debug (endpoint api-key payload)
+  "Format a debug representation of the request.
+Redacts API-KEY to show only the first and last 4 characters."
+  (let ((redacted (if (and api-key (> (length api-key) 8))
+                      (concat (substring api-key 0 4)
+                              "..."
+                              (substring api-key -4))
+                    "****")))
+    (format "endpoint: %s\napi-key:  %s\npayload:\n%s"
+            endpoint redacted
+            (json-encode payload))))
+#+end_src
+
+** Example
+
+#+begin_src emacs-lisp :tangle no :results output :wrap example :exports both
+(princ
+ (ob-prompt--format-debug
+  "https://api.openai.com/v1/chat/completions"
+  "sk-1234567890abcdef"
+  (ob-prompt--build-payload
+   "gpt-4"
+   (ob-prompt--build-messages "Hello"))))
+#+end_src
+
+#+RESULTS:
+#+begin_example
+endpoint: https://api.openai.com/v1/chat/completions
+api-key:  sk-1...cdef
+payload:
+{"model":"gpt-4","max_completion_tokens":16384,"messages":[{"role":"user","content":"Hello"}]}
+#+end_example
+
+* Variable Expansion
+
+When you write =:var code=my-block=, Babel resolves the named
+reference and passes the value in =params=.  Our expand function
+replaces each =$name= occurrence in the body with the corresponding
+value — this gives inline substitution rather than the generic
+behaviour of prepending =name=value= lines.
+
+#+name: expand-body
+#+begin_src emacs-lisp
+(defun org-babel-expand-body:prompt (body params)
+  "Expand BODY for a prompt block by substituting :var references.
+Each :var binding replaces $name in BODY with the variable's value."
+  (let ((expanded body))
+    (dolist (pair (org-babel--get-vars params) expanded)
+      (setq expanded
+            (replace-regexp-in-string
+             (regexp-quote (format "$%s" (car pair)))
+             (save-match-data (format "%s" (cdr pair)))
+             expanded
+             t t)))))
+#+end_src
+
+* Session Support (stub)
+
+Babel requires =org-babel-prep-session:LANG= to exist.  Full
+multi-turn session support (maintaining conversation history across
+blocks) is a future enhancement.
+
+#+name: prep-session
+#+begin_src emacs-lisp
+(defun org-babel-prep-session:prompt (_session _params)
+  "Prepare a prompt session.
+Prompt sessions are not yet supported."
+  (error "ob-prompt: sessions are not yet implemented"))
+#+end_src
+
+* Running Tests
+
+The full ERT test suite lives in =ob-prompt-test.el= (not tangled
+from this file).  Run it from the command line:
+
+#+begin_src shell :wrap example :results output :exports both
+emacs -batch -L . -l ob-prompt-test.el -f ert-run-tests-batch-and-exit 2>&1
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Running 21 tests (2026-02-16 10:23:45-0800, selector ‘t’)
+   passed   1/21  ob-prompt-debug-no-calls-api (0.000111 sec)
+   passed   2/21  ob-prompt-debug-redacts-key (0.000029 sec)
+   passed   3/21  ob-prompt-debug-short-key (0.000019 sec)
+   passed   4/21  ob-prompt-execute-debug-skips-http (0.000046 sec)
+   passed   5/21  ob-prompt-execute-round-trip (0.000088 sec)
+   passed   6/21  ob-prompt-expand-body-no-vars (0.000023 sec)
+   passed   7/21  ob-prompt-expand-body-substitutes-vars (0.000022 sec)
+   passed   8/21  ob-prompt-json-encode-ascii-escapes-non-ascii (0.000036 sec)
+   passed   9/21  ob-prompt-messages-body-only (0.000013 sec)
+   passed  10/21  ob-prompt-messages-nil-system-ignored (0.000011 sec)
+   passed  11/21  ob-prompt-messages-system-and-preamble (0.000016 sec)
+   passed  12/21  ob-prompt-messages-with-preamble (0.000015 sec)
+   passed  13/21  ob-prompt-messages-with-system (0.000013 sec)
+   passed  14/21  ob-prompt-parse-api-error (0.000024 sec)
+   passed  15/21  ob-prompt-parse-malformed-json (0.000332 sec)
+   passed  16/21  ob-prompt-parse-unexpected-structure (0.000025 sec)
+   passed  17/21  ob-prompt-parse-valid-response (0.000017 sec)
+   passed  18/21  ob-prompt-payload-basic (0.000017 sec)
+   passed  19/21  ob-prompt-preamble-no-disables-context (0.000040 sec)
+   passed  20/21  ob-prompt-request-decodes-utf8-response (0.000052 sec)
+   passed  21/21  ob-prompt-request-sends-auth-header (0.000040 sec)
+
+Ran 21 tests, 21 results as expected, 0 unexpected (2026-02-16 10:23:45-0800, 0.001300 sec)
+
+#+end_example
+
+Or interactively from within Emacs:
+
+#+begin_src emacs-lisp :tangle no :results output
+(load-file "ob-prompt-test.el")
+(ert-run-tests-batch "^ob-prompt-")
+#+end_src
+
+* Example Usage
+
+** Basic prompt
+
+#+begin_example
+,#+begin_src prompt :results raw
+How do LLMs improve literate programming?
+,#+end_src
+#+end_example
+
+#+begin_src prompt :results raw
+How do LLMs improve literate programming?
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+LLMs improve literate programming mainly by tightening the feedback loop
+between explanation and implementation.
+
+Concretely:
+
+- They act as an always-available reviewer, questioning design choices
+  and spotting inconsistencies between prose and code.
+- They help draft, refine, and align narrative explanations with the
+  actual behavior of the code.
+- They make examples “live”: you can regenerate explanations or
+  variations directly from the source document.
+- They reduce friction in exploratory writing, letting you iterate on
+  structure and wording without breaking flow.
+
+In short, LLMs turn literate programming from a static exposition into
+an interactive dialogue, while keeping the document itself as the
+single source of truth.
+#+end_assistant
+
+** With a system prompt
+
+#+begin_example
+,#+begin_src prompt :system "You are a concise technical writer. Who speaks like a pirate..." :results raw
+How does emacs org mode support literate programming?
+,#+end_src
+#+end_example
+
+#+begin_src prompt :system "You are a concise technical writer. Who speaks like a pirate..." :results raw
+How does emacs org mode support literate programming?
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+Arrr, listen close, matey:
+
+Emacs Org mode be a fine vessel for literate programmin’ because it lets ye weave code and prose into one sturdy logbook.
+
+In plain seaspeak:
+
+- Ye write explanations, design notes, and code side by side in one Org file.
+- Code lives in Babel src blocks, which can be tangled into real source files or executed right there on deck.
+- Results of execution come back into the document, keepin’ the tale honest and reproducible.
+- Multiple languages sail together — Lisp, Python, shell, and more — all in one chart.
+- Export turns the same file into HTML, PDF, or plain text, without losin’ the narrative.
+
+So Org mode ain’t just holdin’ code — it tells the story of *why* the code exists, and proves it works. A proper captain’s log, savvy? ☠️
+#+end_assistant
+
+** With variables from other blocks
+Org Mode’s [[https://orgmode.org/manual/Noweb-Reference-Syntax.html][noweb]] feature lets you reference other code blocks from
+within a prompt block. This makes it easy to do things like ask the
+LLM to review or explain previously defined code.
+
+To use it, enable =:noweb yes= in the prompt block header and insert
+references to named blocks using =<<name>>=. When the block is
+executed, those references are expanded in place, and the resolved
+content is sent as part of the prompt.
+
+#+begin_example
+#+name: my-code
+,#+begin_src python :exports none :python python3
+def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+,#+end_src
+
+,#+begin_src prompt :var code=my-code :results raw :preamble no :noweb yes :wrap example
+Review this code and suggest improvements:
+
+<<my-code>>
+,#+end_src
+#+end_example
+
+#+name: my-code
+#+begin_src python :exports none :python python3
+def fibonacci(n):
+    a, b = 0, 1
+    for _ in range(n):
+        a, b = b, a + b
+    return a
+#+end_src
+
+#+begin_src prompt :var code=my-code :results raw :preamble no :noweb yes :wrap example
+Review this code and suggest improvements: (output your results in normal text format). Make sure to reference specific parts of the code / lines
+
+<<my-code>>
+#+end_src
+
+#+RESULTS:
+#+begin_assistant
+#+begin_example
+Here is a brief review with specific suggestions:
+
+1. **Function signature (line 1)**  
+   - The function does not specify expected input types or behavior for edge cases.  
+   - Improvement: Add a docstring describing what `n` represents (e.g., zero-based index), expected type (`int`), and return value.  
+   - Consider type hints: `def fibonacci(n: int) -> int:`.
+
+2. **Input validation (line 1–2)**  
+   - The function assumes `n` is a non-negative integer.  
+   - Improvement: Explicitly check for invalid inputs (e.g., negative values or non-integers) and raise a `ValueError` or `TypeError`.
+
+3. **Initialization clarity (line 2)**  
+   - `a, b = 0, 1` is correct but implicit.  
+   - Improvement: Add a short comment explaining that `a` and `b` track consecutive Fibonacci numbers for readability, especially for less experienced readers.
+
+4. **Loop construct (line 3)**  
+   - `for _ in range(n):` is idiomatic and efficient.  
+   - Improvement: None required, but you could rename `_` to something like `i` if step-wise debugging or clarity is desired.
+
+5. **Return value semantics (line 5)**  
+   - The function returns `a`, which corresponds to `F(n)` with `F(0) = 0`.  
+   - Improvement: Explicitly document this convention in the docstring, as some definitions use different starting indices.
+
+6. **Testing and examples (missing)**  
+   - There are no usage examples.  
+   - Improvement: Include example calls in a docstring or separate test cases to clarify expected behavior (e.g., `fibonacci(0) == 0`, `fibonacci(1) == 1`).
+#+end_example
+#+end_assistant
+
+
+** Using :preamble for document context
+
+When =:preamble yes= is set, the entire buffer content above the
+block is sent as context, wrapped in =<context>= tags.  This is
+powerful for literate documents where earlier sections inform later
+prompts:
+
+#+begin_example
+,#+begin_src prompt :preamble yes :results drawer
+Given the code and discussion above, what edge cases are missing?
+,#+end_src
+#+end_example
+
+** Debug mode
+
+Inspect the exact request that would be sent without calling the API:
+
+#+begin_example
+,#+begin_src prompt :debug yes :results code
+What is 2 + 2?
+,#+end_src
+#+end_example
+
+* File Assembly
+
+Every Emacs Lisp package needs a standard file header (library
+commentary, dependency declarations) and a closing =provide= form.
+Rather than clutter the top of the document with boilerplate, we
+define them here and let noweb compose the final =ob-prompt.el= in the
+correct order.
+
+** File header
+
+#+name: file-header
+#+begin_src emacs-lisp
+;;; ob-prompt.el --- Org Babel functions for LLM prompts -*- lexical-binding: t; -*-
+
+;; Copyright (C) 2026 Pablo Munoz
+
+;; Author: Pablo Munoz <contact@slashpablo.com>
+;; URL: https://github.com/pamuz/ob-prompt
+;; Version: 0.1.0
+;; Package-Requires: ((emacs "28.1") (org "9.7"))
+;; Keywords: org, babel, ai, llm
+
+;;; Commentary:
+
+;; Org Babel support for executing LLM prompts as src blocks.
+;;
+;; Usage:
+;;   #+begin_src prompt :model claude-sonnet-4-5-20250929 :results raw
+;;   Explain monads in simple terms.
+;;   #+end_src
+;;
+;; Press C-c C-c on the block to send the prompt to an LLM
+;; and insert the response as a #+RESULTS: block.
+
+;;; Code:
+
+(require 'ob)
+(require 'org-macs)
+(require 'json)
+(require 'url)
+#+end_src
+
+** Provide
+
+#+name: provide
+#+begin_src emacs-lisp
+(provide 'ob-prompt)
+
+;;; ob-prompt.el ends here
+#+end_src
+
+** Tangled output
+
+This single block tangles into =ob-prompt.el=.  The noweb references
+pull in every named block in the order an Emacs Lisp package expects:
+header, declarations, implementation, provide.
+
+#+begin_src emacs-lisp :tangle ob-prompt.el :noweb yes :padline yes
+<<file-header>>
+<<header-args-custom>>
+<<header-args-default>>
+<<build-messages>>
+<<build-payload>>
+<<parse-response>>
+<<json-encode-ascii>>
+<<http-transport>>
+<<execute>>
+<<format-debug>>
+<<expand-body>>
+<<prep-session>>
+<<provide>>
+#+end_src

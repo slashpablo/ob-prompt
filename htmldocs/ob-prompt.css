@@ -1,0 +1,90 @@
+/* Conversational styling for prompt/assistant blocks */
+.org-src-container:has(> pre.src-prompt),
+div.assistant {
+  position: relative;
+  margin: 1.5em 0 1.5em 0;
+  padding: 0.8em 1em 0.8em 1em;
+  border-radius: 4px;
+}
+
+/* Prompt blocks */
+.org-src-container:has(> pre.src-prompt) {
+  border-left: 3px solid #2980B9;
+  background: #f0f7fd;
+}
+.org-src-container:has(> pre.src-prompt) pre.src-prompt {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: pre-wrap;
+}
+.org-src-container:has(> pre.src-prompt)::before {
+  content: "\1F464  PROMPT";  /* 👤 */
+  display: block;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #2980B9;
+  margin-bottom: 0.4em;
+}
+/* Prompt blocks are natural language, not code — hide copy button */
+.org-src-container:has(> pre.src-prompt) .copy-code-button {
+  display: none;
+}
+
+/* Syntax highlighting (light theme, for org-html-htmlize-output-type 'css) */
+pre, code                    { color: #333; }
+.org-keyword                 { color: #7928a1; }  /* defun, let, setq, require */
+.org-builtin                 { color: #7928a1; }
+.org-function-name           { color: #0057ae; }
+.org-variable-name           { color: #6c4400; }
+.org-string                  { color: #1a7d1a; }
+.org-doc                     { color: #1a7d1a; }
+.org-comment, .org-comment-delimiter { color: #888; font-style: italic; }
+.org-constant                { color: #b35000; }
+.org-type                    { color: #007070; }
+.org-warning                 { color: #c00; }
+.org-preprocessor            { color: #7928a1; }
+.org-negation-char           { color: #c00; }
+
+/* Assistant blocks */
+div.assistant {
+  border-left: 3px solid #27ae60;
+  background: #f0faf4;
+}
+div.assistant > *:last-child {
+  margin-bottom: 0;
+}
+div.assistant::before {
+  content: "\1F916  ASSISTANT";  /* 🤖 */
+  display: block;
+  font-size: 0.7em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #27ae60;
+  margin-bottom: 0.4em;
+}
+
+.slash{
+  display:inline-block;
+  width:0.55em;
+  height:1em;
+  position:relative;
+  vertical-align:-0.1em;
+}
+.slash::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-0.05em;
+  width:0.25em;          /* thickness */
+  height:1.1em;
+  background:currentColor;
+  transform:translateX(-50%) rotate(20deg);
+  border-radius:0.08em;  /* optional: smoother */
+}
