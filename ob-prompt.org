@@ -53,8 +53,8 @@ Explain monads in simple terms.
 #+end_example
 
 The implementation is split into small helpers.  Each section
-introduces a concept, shows the code, then demonstrates it with a
-live example you can =C-c C-c= to see the actual output.  The full
+introduces a concept, shows the code, then demonstrates it with a live
+example you can =C-c C-c= to see the actual output.  The full
 automated test suite lives separately in =ob-prompt-test.el=.
 
 * Header Arguments
@@ -746,10 +746,6 @@ correct order.
 
 #+name: provide
 #+begin_src emacs-lisp
-  ;;;###autoload
-  (with-eval-after-load 'org
-    (require 'ob-prompt))
-
   (provide 'ob-prompt)
 
   ;;; ob-prompt.el ends here

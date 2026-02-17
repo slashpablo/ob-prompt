@@ -201,10 +201,6 @@ Each :var binding replaces $name in BODY with the variable's value."
 Prompt sessions are not yet supported."
   (error "ob-prompt: sessions are not yet implemented"))
 
-;;;###autoload
-(with-eval-after-load 'org
-  (require 'ob-prompt))
-
 (provide 'ob-prompt)
 
 ;;; ob-prompt.el ends here
