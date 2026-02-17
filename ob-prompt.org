@@ -98,7 +98,8 @@ and reproducible.
     "Default header arguments for prompt src blocks.")
 #+end_src
 
-* Building Messages
+* HTTP backend
+** Building Messages
 
 The =messages= array is the core data structure sent to any
 OpenAI-compatible API.  This helper assembles it from the prompt body
@@ -171,7 +172,7 @@ Without vconcat, messages would be encoded as a JSON object or
 malformed structure rather than the required array.
 #+end_assistant
 
-** Example
+*** Example
 
 All three options together — system prompt, preamble context, and
 body.  =C-c C-c= to see the exact message array that would be sent:
@@ -191,7 +192,7 @@ body.  =C-c C-c= to see the exact message array that would be sent:
    . "<context>\n* Header\nSome earlier buffer content...\n</context>\n\nWhat patterns do you see?"))]
 #+end_example
 
-* Building the Request Payload
+** Building the Request Payload
 
 The payload is the top-level JSON object sent to the API.  Keeping
 this as a separate helper means we can test the exact structure
@@ -208,7 +209,7 @@ MESSAGES is the vector returned by `ob-prompt--build-messages'."
     ("messages" . ,messages)))
 #+end_src
 
-** Example
+*** Example
 
 The full payload, ready to be passed to =json-encode=:
 
@@ -224,7 +225,7 @@ The full payload, ready to be passed to =json-encode=:
  ("messages" . [((role . "user") (content . "Explain monads."))]))
 #+end_example
 
-* Parsing the Response
+** Parsing the Response
 
 The API returns a JSON object with a =choices= array.  This helper
 extracts the assistant's text content, signaling a clear error if the
@@ -290,7 +291,7 @@ But for ob-prompt’s design goals (single prompt → single response),
 indexing `[0]` is exactly right.
 #+end_assistant
 
-** Example
+*** Example
 
 Parsing a realistic API response — you can see exactly what gets
 extracted:
@@ -305,9 +306,9 @@ extracted:
 A monad is a design pattern.
 #+end_example
 
-* Sending the Request
+** Sending the Request
 
-** ASCII-safe JSON Encoding
+*** ASCII-safe JSON Encoding
 
 =url-http-create-request= rejects any request whose =string-bytes=
 exceeds its =length= — i.e. any non-ASCII byte in the assembled
@@ -330,7 +331,7 @@ This avoids `url-http-create-request' failing with
      json nil t)))
 #+end_src
 
-** HTTP Transport
+*** HTTP Transport
 
 #+name: http-transport
 #+begin_src emacs-lisp
@@ -363,6 +364,34 @@ This avoids `url-http-create-request' failing with
          (kill-buffer buffer)))))
 #+end_src
 
+* CLI backend
+When =:command= is present on a block, ob-prompt switches to CLI
+mode. The value is the shell command to invoke. The prompt body (after
+variable/noweb expansion) is passed via *stdin*.
+
+#+begin_src emacs-lisp
+  (defun ob-prompt--request-cli (command input)
+    "Send INPUT to shell COMMAND via stdin, return stdout.
+    Signals `user-error' on non-zero exit."
+    (with-temp-buffer
+      (let ((exit-code (call-process-region
+  		      input nil shell-file-name nil t nil
+  		      shell-command-switch command)))
+        (unless (eq exit-code 0)
+  	(user-error "ob-prompt: command failed (exit %s): %s"
+  		    exit-code
+  		    (string-trim (buffer-string))))
+        (string-trim-right (buffer-string)))))
+
+  (defun ob-prompt--build-cli-input (body &optional preamble-text)
+    "Build the plain-text input string for CLI transport.
+  BODY is the user prompt. PREAMBLE-TEXT is prepended wrapped in context
+  tags if non-nil."
+    (if preamble-text
+        (format "<context>\n%s\n</context>\n\n%s" preamble-text body)
+      body))
+#+end_src
+
 * The Core Execution Function
 
 This is what Babel calls when you press =C-c C-c= on a =prompt=
@@ -371,33 +400,39 @@ above.
 
 #+name: execute
 #+begin_src emacs-lisp
-(defun org-babel-execute:prompt (body params)
-  "Execute a prompt BODY with PARAMS via Org Babel.
-Sends the prompt to the configured LLM endpoint and returns
-the response text."
-  (let* ((model    (cdr (assq :model params)))
-         (endpoint (cdr (assq :endpoint params)))
-         (api-key  (cdr (assq :api-key params)))
-         (system   (cdr (assq :system params)))
-         (preamble (cdr (assq :preamble params)))
-         (debug    (cdr (assq :debug params)))
-         ;; Gather buffer text above this src block when :preamble is set
-         (preamble-text
-          (when (equal preamble "yes")
-            (let ((src-block (org-element-at-point)))
-              (buffer-substring-no-properties
-               (point-min)
-               (org-element-property :begin src-block)))))
-         ;; Expand :var references in the body
-         (expanded-body (org-babel-expand-body:prompt body params))
-         ;; Assemble the request
-         (messages (ob-prompt--build-messages
-                    expanded-body system preamble-text))
-         (payload  (ob-prompt--build-payload model messages)))
-    (if (equal debug "yes")
-        (ob-prompt--format-debug endpoint api-key payload)
-      (ob-prompt--parse-response
-       (ob-prompt--request endpoint api-key payload)))))
+  (defun org-babel-execute:prompt (body params)
+    "Execute a prompt BODY with PARAMS via Org Babel.
+  Sends the prompt to the configured LLM endpoint and returns
+  the response text."
+    (let* ((model    (cdr (assq :model params)))
+           (endpoint (cdr (assq :endpoint params)))
+           (api-key  (cdr (assq :api-key params)))
+           (system   (cdr (assq :system params)))
+           (preamble (cdr (assq :preamble params)))
+           (debug    (cdr (assq :debug params)))
+  	 (command  (cdr (assq :command params)))
+           ;; Gather buffer text above this src block when :preamble is set
+           (preamble-text
+            (when (equal preamble "yes")
+              (let ((src-block (org-element-at-point)))
+                (buffer-substring-no-properties
+                 (point-min)
+                 (org-element-property :begin src-block)))))
+           ;; Expand :var references in the body
+           (expanded-body (org-babel-expand-body:prompt body params))
+           ;; Assemble the request
+           (messages (ob-prompt--build-messages
+                      expanded-body system preamble-text))
+           (payload  (ob-prompt--build-payload model messages)))
+      (if command
+  	;; CLI mode - pipe plain text to command, return stdout directly
+  	(let ((input (ob-prompt--build-cli-input
+  		      expanded-body preamble)))
+  	  (ob-prompt--request-cli command input))
+      (if (equal debug "yes")
+          (ob-prompt--format-debug endpoint api-key payload)
+        (ob-prompt--parse-response
+         (ob-prompt--request endpoint api-key payload))))))
 #+end_src
 
 ** Debug Formatting
