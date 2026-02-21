@@ -839,7 +839,7 @@ correct order.
 ;; Author: Pablo Munoz <contact@slashpablo.com>
 ;; Maintainer: Pablo Munoz <contact@slashpablo.com>
 ;; URL: https://github.com/slashpablo/ob-prompt
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Package-Requires: ((emacs "28.1") (org "9.7"))
 ;; Keywords: org, babel, ai, llm
 
