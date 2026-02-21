@@ -98,8 +98,8 @@ This project is licensed under the GNU General Public License v3.0 or later. See
 
 ## Author
 
-Pablo Munoz
+Pablo M
 
-- https://x.com/digitalbandido
+- https://x.com/slashpablo
 - https://github.com/slashpablo
 - contact@slashpablo.com
