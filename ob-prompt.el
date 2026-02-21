@@ -3,7 +3,7 @@
 ;; Copyright (C) 2026 Pablo Munoz
 
 ;; Author: Pablo Munoz <contact@slashpablo.com>
-;; Mantainer: Pablo Munoz <contact@slashpablo.com>
+;; Maintainer: Pablo Munoz <contact@slashpablo.com>
 ;; URL: https://github.com/slashpablo/ob-prompt
 ;; Version: 0.1.0
 ;; Package-Requires: ((emacs "28.1") (org "9.7"))
@@ -50,16 +50,29 @@
     (endpoint . :any)   ;; API endpoint URL
     (api-key  . :any)   ;; API key (string or evaluated form)
     (preamble . :any)   ;; include buffer content above block as context
+    (command  . :any)   ;; shell command for CLI backend (reads stdin)
     (debug    . :any))  ;; return raw request/response instead of content
   "Prompt-specific header arguments for ob-prompt.")
 
 (defvar org-babel-default-header-args:prompt
   '((:results . "raw")
-    (:exports . "both") ;; Make sures both prompt and result are exported
+    (:exports . "both") ;; Ensures both prompt and result are exported
     (:eval . "no-export") ;; Do not re-evaluate prompt blocks on export
     (:wrap . "assistant") ;; Provide concrete boundries to responses
     (:noweb . "yes")) ;; Enable <<block-name>> inclusion by default
   "Default header arguments for prompt src blocks.")
+
+(defun org-babel-expand-body:prompt (body params)
+  "Expand BODY for a prompt block by substituting :var references.
+Each :var binding replaces $name in BODY with the variable's value."
+  (let ((expanded body))
+    (dolist (pair (org-babel--get-vars params) expanded)
+      (setq expanded
+            (replace-regexp-in-string
+             (regexp-quote (format "$%s" (car pair)))
+             (save-match-data (format "%s" (cdr pair)))
+             expanded
+             t t)))))
 
 (defun ob-prompt--build-messages (body &optional system preamble-text)
   "Build the messages vector for the API request.
@@ -121,28 +134,49 @@ This avoids `url-http-create-request' failing with
 Returns the response body as a string.
 Signals `user-error' on HTTP or transport errors."
   (let* ((url-request-method "POST")
-	 (url-request-extra-headers
-	  `(("Content-Type" . "application/json")
-	    ("Authorization" . ,(concat "Bearer " api-key))))
-	 (url-request-data (ob-prompt--json-encode-ascii payload))
-	 (buffer (url-retrieve-synchronously endpoint t t 300)))
+         (url-request-extra-headers
+          `(("Content-Type" . "application/json")
+            ("Authorization" . ,(concat "Bearer " api-key))))
+         (url-request-data (ob-prompt--json-encode-ascii payload))
+         (buffer (url-retrieve-synchronously endpoint t t 300)))
     (unless buffer
       (user-error "ob-prompt: request failed (no response buffer)"))
     (with-current-buffer buffer
       (unwind-protect
-       (progn
-	 (goto-char (point-min))
-	 ;; Check HTTP status
-	 (unless (looking-at "HTTP/.* 200")
-	   (re-search-forward "^HTTP/.* \\([0-9]+\\)" nil t)
-	   (user-error "ob-prompt: HTTP error %s"
-		       (match-string 1)))
-	 ;; Skip headers
-	 (re-search-forward "\r?\n\r?\n" nil 'move)
-	 (decode-coding-string
-	  (buffer-substring-no-properties (point) (point-max))
-	  'utf-8))
-       (kill-buffer buffer)))))
+          (progn
+            (goto-char (point-min))
+            ;; Check HTTP status
+            (unless (looking-at "HTTP/.* 200")
+              (re-search-forward "^HTTP/.* \\([0-9]+\\)" nil t)
+              (user-error "ob-prompt: HTTP error %s"
+                          (match-string 1)))
+            ;; Skip headers
+            (re-search-forward "\r?\n\r?\n" nil 'move)
+            (decode-coding-string
+             (buffer-substring-no-properties (point) (point-max))
+             'utf-8))
+        (kill-buffer buffer)))))
+
+(defun ob-prompt--build-cli-input (body &optional preamble-text)
+  "Build the plain-text input string for CLI transport.
+BODY is the user prompt.  PREAMBLE-TEXT is prepended wrapped in
+context tags if non-nil."
+  (if preamble-text
+      (format "<context>\n%s\n</context>\n\n%s" preamble-text body)
+    body))
+
+(defun ob-prompt--request-cli (command input)
+  "Send INPUT to shell COMMAND via stdin, return stdout.
+Signals `user-error' on non-zero exit."
+  (with-temp-buffer
+    (let ((exit-code (call-process-region
+                      input nil shell-file-name nil t nil
+                      shell-command-switch command)))
+      (unless (eq exit-code 0)
+        (user-error "ob-prompt: command failed (exit %s): %s"
+                    exit-code
+                    (string-trim (buffer-string))))
+      (string-trim-right (buffer-string)))))
 
 (defun org-babel-execute:prompt (body params)
   "Execute a prompt BODY with PARAMS via Org Babel.
@@ -154,6 +188,7 @@ the response text."
          (system   (cdr (assq :system params)))
          (preamble (cdr (assq :preamble params)))
          (debug    (cdr (assq :debug params)))
+         (command  (cdr (assq :command params)))
          ;; Gather buffer text above this src block when :preamble is set
          (preamble-text
           (when (equal preamble "yes")
@@ -162,15 +197,20 @@ the response text."
                (point-min)
                (org-element-property :begin src-block)))))
          ;; Expand :var references in the body
-         (expanded-body (org-babel-expand-body:prompt body params))
-         ;; Assemble the request
-         (messages (ob-prompt--build-messages
-                    expanded-body system preamble-text))
-         (payload  (ob-prompt--build-payload model messages)))
-    (if (equal debug "yes")
-        (ob-prompt--format-debug endpoint api-key payload)
-      (ob-prompt--parse-response
-       (ob-prompt--request endpoint api-key payload)))))
+         (expanded-body (org-babel-expand-body:prompt body params)))
+    (if command
+        ;; CLI mode — pipe plain text to command, return stdout directly
+        (let ((input (ob-prompt--build-cli-input
+                      expanded-body preamble-text)))
+          (ob-prompt--request-cli command input))
+      ;; HTTP mode — build JSON payload, call API
+      (let* ((messages (ob-prompt--build-messages
+                        expanded-body system preamble-text))
+             (payload (ob-prompt--build-payload model messages)))
+        (if (equal debug "yes")
+            (ob-prompt--format-debug endpoint api-key payload)
+          (ob-prompt--parse-response
+           (ob-prompt--request endpoint api-key payload)))))))
 
 (defun ob-prompt--format-debug (endpoint api-key payload)
   "Format a debug representation of the request.
@@ -183,18 +223,6 @@ Redacts API-KEY to show only the first and last 4 characters."
     (format "endpoint: %s\napi-key:  %s\npayload:\n%s"
             endpoint redacted
             (json-encode payload))))
-
-(defun org-babel-expand-body:prompt (body params)
-  "Expand BODY for a prompt block by substituting :var references.
-Each :var binding replaces $name in BODY with the variable's value."
-  (let ((expanded body))
-    (dolist (pair (org-babel--get-vars params) expanded)
-      (setq expanded
-            (replace-regexp-in-string
-             (regexp-quote (format "$%s" (car pair)))
-             (save-match-data (format "%s" (cdr pair)))
-             expanded
-             t t)))))
 
 (defun org-babel-prep-session:prompt (_session _params)
   "Prepare a prompt session.

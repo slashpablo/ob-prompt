@@ -57,8 +57,8 @@
   #+end_src
 
 ** TODO Submit to MELPA
-- [ ] Commit the recipe to your MELPA fork.
-- [ ] Open a Pull Request against =melpa/melpa=.
+- [X] Commit the recipe to your MELPA fork.
+- [X] Open a Pull Request against =melpa/melpa=.
 - [ ] In PR description, briefly explain what ob-prompt does.
 
 ** TODO After Acceptance
